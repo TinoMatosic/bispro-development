@@ -9,7 +9,7 @@ public class User {
     @Id
     @Column(name = "u_a_accountid", length = 100)
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private String accountId;
+    private Long accountId;
 
     @Column(name = "u_role", nullable = false, length = 100)
     private Role role;
@@ -17,22 +17,23 @@ public class User {
     @Column(name = "u_plan", nullable = false, length = 100)
     private String plan;
 
-    public User(String accountId, Role role, String plan) {
+    @OneToOne
+    @JoinColumn(name = "u_r_restaurant")
+    private Restaurant restaurant;
+
+    public User(Long accountId, Role role, String plan, Restaurant restaurant) {
         this.accountId = accountId;
         this.role = role;
         this.plan = plan;
+        this.restaurant = restaurant;
     }
 
     public User() {
 
     }
 
-    public String getAccountId() {
+    public Long getAccountId() {
         return accountId;
-    }
-
-    public void setAccountId(String accountId) {
-        this.accountId = accountId;
     }
 
     public Role getRole() {
@@ -49,5 +50,9 @@ public class User {
 
     public void setPlan(String plan) {
         this.plan = plan;
+    }
+
+    public Restaurant getRestaurant() {
+        return restaurant;
     }
 }

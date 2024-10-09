@@ -1,9 +1,7 @@
 package dev.bispro.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import org.springframework.lang.NonNull;
 
 @Entity
 @Table(name = "a_account")
@@ -11,15 +9,21 @@ public class Account {
 
     @Id
     @Column(name = "a_accountid")
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long accountId;
+
     @Column(name = "a_firstname", length = 50)
     private String firstname;
+
     @Column(name = "a_lastname", length = 50)
     private String lastname;
+
     @Column(name = "a_email", length = 50)
     private String email;
+
     @Column(name = "a_password", length = 50)
     private String password;
+
 
     public Account(Long accountId, String firstname, String lastname, String email, String password) {
         this.accountId = accountId;
@@ -41,6 +45,7 @@ public class Account {
         return accountId;
     }
 
+    @NonNull
     public String getFirstname() {
         return firstname;
     }
