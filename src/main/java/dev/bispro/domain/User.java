@@ -1,5 +1,6 @@
 package dev.bispro.domain;
 
+import dev.bispro.persistence.converter.RoleConverter;
 import jakarta.persistence.*;
 
 @Entity
@@ -11,7 +12,8 @@ public class User {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long accountId;
 
-    @Column(name = "u_role", nullable = false, length = 100)
+    @Column(columnDefinition = RoleConverter.COLUMN_DEFINITION)
+    @Enumerated(EnumType.STRING)
     private Role role;
 
     @Column(name = "u_plan", nullable = false, length = 100)

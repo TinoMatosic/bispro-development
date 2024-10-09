@@ -8,7 +8,7 @@ import org.springframework.lang.NonNull;
 public class Account {
 
     @Id
-    @Column(name = "a_accountid")
+    @Column(name = "a_accountId")
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long accountId;
 
@@ -35,10 +35,6 @@ public class Account {
 
     public Account() {
 
-    }
-
-    public void setAccountId(Long accountId) {
-        this.accountId = accountId;
     }
 
     public Long getAccountId() {
