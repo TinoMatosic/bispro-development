@@ -36,6 +36,10 @@ public class Restaurant {
     @OneToMany
     private List<Employee> employees;
 
+    @Column(name = "r_o_orders")
+    @OneToMany
+    private List<Order> orders;
+
     public Restaurant(Long id, String name, String street, String number, String city, String postalCode, String state, List<Employee> employees) {
         this.id = id;
         this.name = name;
