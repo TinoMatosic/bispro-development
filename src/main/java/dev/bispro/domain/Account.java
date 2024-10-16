@@ -1,5 +1,6 @@
 package dev.bispro.domain;
 
+import dev.bispro.domain.exceptions.DataValidationException;
 import jakarta.persistence.*;
 import org.springframework.lang.NonNull;
 
@@ -41,36 +42,47 @@ public class Account {
         return accountId;
     }
 
-    @NonNull
+    public void setFirstname(String firstname) {
+        if (firstname == null || firstname.trim().isEmpty()) {
+            throw DataValidationException.forInvalidInput("First name cannot be null or empty.");
+        }
+        this.firstname = firstname;
+    }
+
     public String getFirstname() {
         return firstname;
     }
 
-    public void setFirstname(String firstname) {
-        this.firstname = firstname;
+    public void setLastname(String lastname) {
+        if (lastname == null || lastname.trim().isEmpty()) {
+            throw DataValidationException.forInvalidInput("Last name cannot be null or empty.");
+        }
+        this.lastname = lastname;
     }
 
     public String getLastname() {
         return lastname;
     }
 
-    public void setLastname(String lastname) {
-        this.lastname = lastname;
+    public void setEmail(String email) {
+        if (email == null || !email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$")) {
+            throw DataValidationException.forInvalidInput("Invalid email format.");
+        }
+        this.email = email;
     }
 
     public String getEmail() {
         return email;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setPassword(String password) {
+        if (password == null || password.length() < 8) {
+            throw DataValidationException.forInvalidInput("Password must be at least 8 characters long.");
+        }
+        this.password = password;
     }
 
     public String getPassword() {
         return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 }

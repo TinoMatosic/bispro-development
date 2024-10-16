@@ -1,30 +1,24 @@
 package dev.bispro.domain;
 
-import dev.bispro.persistence.converter.RoleConverter;
+import dev.bispro.persistence.converters.RoleConverter;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "u_users")
-public class User {
-
-    @Id
-    @Column(name = "u_a_accountid", length = 100)
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long accountId;
+public class User extends Account {
 
     @Column(columnDefinition = RoleConverter.COLUMN_DEFINITION)
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    @Column(name = "u_plan", nullable = false, length = 100)
-    private String plan;
+    @Column(name = "u_plan", nullable = false)
+    private Plan plan;
 
     @OneToOne
-    @JoinColumn(name = "u_r_restaurant")
+    @JoinColumn(name = "u_r_restaurant", nullable = false)
     private Restaurant restaurant;
 
-    public User(Long accountId, Role role, String plan, Restaurant restaurant) {
-        this.accountId = accountId;
+    public User(Account account, Role role, Plan plan, Restaurant restaurant) {
+        super(account.getAccountId(), account.getFirstname(), account.getLastname(), account.getEmail(), account.getPassword());
         this.role = role;
         this.plan = plan;
         this.restaurant = restaurant;
@@ -32,10 +26,6 @@ public class User {
 
     public User() {
 
-    }
-
-    public Long getAccountId() {
-        return accountId;
     }
 
     public Role getRole() {
@@ -46,11 +36,11 @@ public class User {
         this.role = role;
     }
 
-    public String getPlan() {
+    public Plan getPlan() {
         return plan;
     }
 
-    public void setPlan(String plan) {
+    public void setPlan(Plan plan) {
         this.plan = plan;
     }
 
