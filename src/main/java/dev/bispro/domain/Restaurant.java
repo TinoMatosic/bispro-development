@@ -1,6 +1,7 @@
 package dev.bispro.domain;
 
 
+import dev.bispro.domain.exceptions.DataValidationException;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -27,7 +28,7 @@ public class Restaurant {
     private String city;
 
     @Column(name = "r_postalCode", length = 10)
-    private String postalCode;
+    private Integer postalCode;
 
     @Column(name = "r_state", length = 50)
     private String state;
@@ -40,25 +41,21 @@ public class Restaurant {
     @OneToMany
     private List<Order> orders;
 
-    public Restaurant(Long id, String name, String street, String number, String city, String postalCode, String state, List<Employee> employees) {
+    public Restaurant(Long id, String name, String street, String number, String city, int postalCode, String state, List<Employee> employees,List<Order> orders) {
         this.id = id;
-        this.name = name;
-        this.street = street;
-        this.number = number;
-        this.city = city;
-        this.postalCode = postalCode;
-        this.state = state;
-        this.employees = employees;
+        setName(name);
+        setStreet(street);
+        setNumber(number);
+        setCity(city);
+        setPostalCode(postalCode);
+        setState(state);
+        setEmployees(employees);
+        setOrders(orders);
     }
 
     public Restaurant() {
 
     }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public Long getId() {
         return id;
     }
@@ -68,6 +65,9 @@ public class Restaurant {
     }
 
     public void setName(String name) {
+        if (name == null || name.trim().isEmpty()) {
+            throw DataValidationException.forInvalidInput("Name cannot be null or empty.");
+        }
         this.name = name;
     }
 
@@ -75,15 +75,40 @@ public class Restaurant {
         return street;
     }
 
+    /**
+     * ^[A-Za-zÄÖÜäöüß\\s]+$: Erlaubt nur Buchstaben, Leerzeichen und Umlaute, aber keine Ziffern.
+     */
     public void setStreet(String street) {
+        if (street == null || street.trim().isEmpty()) {
+            throw DataValidationException.forInvalidInput("Street cannot be null or empty.");
+        }
+        String streetRegex = "^[A-Za-zÄÖÜäöüß\\s]+$";
+        if (!street.matches(streetRegex)) {
+            throw DataValidationException.forInvalidInput("Street name must not contain numbers (e.g. 'Musterstraße').");
+        }
         this.street = street;
     }
+
+
 
     public String getNumber() {
         return number;
     }
 
+
+    /**
+     * ^\\d+: Stellt sicher, dass die Nummer mit einer oder mehreren Ziffern beginnt.
+     * [a-zA-Z]?$: Optionaler Buchstabe (ein einzelner Buchstabe am Ende, z.B. "a", "B").
+     */
     public void setNumber(String number) {
+        if (number == null || number.trim().isEmpty()) {
+            throw DataValidationException.forInvalidInput("Number cannot be null or empty.");
+        }
+        String numberRegex = "^\\d+[a-zA-Z]?$";
+        if (!number.matches(numberRegex)) {
+            throw DataValidationException.forInvalidInput("Number must start with digits and may optionally have a letter (e.g. '14a' or '56').");
+        }
+
         this.number = number;
     }
 
@@ -92,6 +117,9 @@ public class Restaurant {
     }
 
     public void setCity(String city) {
+        if (name == null || name.trim().isEmpty()) {
+            throw DataValidationException.forInvalidInput("City cannot be null or empty.");
+        }
         this.city = city;
     }
 
@@ -100,6 +128,9 @@ public class Restaurant {
     }
 
     public void setState(String state) {
+        if (name == null || name.trim().isEmpty()) {
+            throw DataValidationException.forInvalidInput("State cannot be null or empty.");
+        }
         this.state = state;
     }
 
@@ -108,14 +139,38 @@ public class Restaurant {
     }
 
     public void setEmployees(List<Employee> employees) {
+        if (employees == null) {
+            throw DataValidationException.forInvalidInput("Employees list cannot be null.");
+        }
+        /* Überprüfen, ob die Liste null-Elemente enthält
+        for (Employee employee : employees) {
+            if (employee == null) {
+                throw DataValidationException.forInvalidInput("Employees list contains null elements.");
+            }*/
         this.employees = employees;
-    }
+        }
 
-    public String getPostalCode() {
+
+    public Integer getPostalCode() {
         return postalCode;
     }
 
-    public void setPostalCode(String postalCode) {
+    public void setPostalCode(Integer postalCode) {
+        if (postalCode <= 0) {
+            throw DataValidationException.forInvalidInput("PostalCode cannot be under or equal 0.");
+        }
         this.postalCode = postalCode;
+    }
+
+    public List<Order> getOrders() {
+        return orders;
+    }
+
+    public void setOrders(List<Order> orders) {
+        if (orders == null) {
+            throw DataValidationException.forInvalidInput("Orders list cannot be null.");
+        }
+
+        this.orders = orders;
     }
 }
