@@ -5,18 +5,18 @@ import jakarta.persistence.*;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "la_layerAppearance")
+@Table(name = "layerAppearances")
 public class LayerAppearance {
 
     @Id
-    @Column(name = "la_layerAppId")
+    @Column(name = "layerAppId")
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long appearanceId;
 
-    @Column(name = "la_fill")
+    @Column(name = "fill")
     private String fill;
 
-    @Column(name = "la_corners")
+    @Column(name = "corners")
     private Integer corners;
 
     public LayerAppearance(Long appearanceId, String fill, Integer corners) {
@@ -32,6 +32,7 @@ public class LayerAppearance {
     public Long getAppearanceId() {
         return appearanceId;
     }
+
     public String getFill() {
         return fill;
     }

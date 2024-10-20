@@ -6,36 +6,35 @@ import jakarta.persistence.*;
 import java.util.List;
 
 @Entity
-@Table(name = "l_layers")
+@Table(name = "layers")
 public class Layer {
 
     @Id
-    @Column(name = "l_layerId")
+    @Column(name = "layerId")
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long layerId;
 
-    @Column(name = "l_layername")
+    @Column(name = "layername")
     private String layername;
 
-    @Column(name = "l_posX")
+    @Column(name = "posX")
     private Integer posX;
 
-    @Column(name = "l_posY")
+    @Column(name = "posY")
     private Integer posY;
 
-    @Column(name = "l_width")
+    @Column(name = "width")
     private Integer width;
 
-    @Column(name = "l_height")
+    @Column(name = "height")
     private Integer height;
 
-    @Column(name = "l_appearance")
+    @Column(name = "appearance")
     @OneToMany
     private List<LayerAppearance> appearance;
 
-    @Column(name = "l_rotation")
+    @Column(name = "rotation")
     private Integer rotation;
-
 
     public Layer(Long layerId, String layername, Integer posX, Integer posY, Integer width, Integer height, List<LayerAppearance> appearance, Integer rotation) {
         this.layerId = layerId;

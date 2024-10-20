@@ -3,30 +3,23 @@ package dev.bispro.domain;
 import jakarta.persistence.*;
 
 import java.util.Date;
-import java.util.List;
 
 @Entity
-@Table(name = "o_order")
+@Table(name = "orders")
 public class Order
 {
-
     @Id
-    @Column(name = "o_orderid")
+    @Column(name = "orderid")
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long orderId;
 
-    @Column(name = "o_total")
+    @Column(name = "total")
     private float total;
 
-    @Column(name = "o_net")
+    @Column(name = "net")
     private float net;
-    @Column(name = "o_datetime")
+    @Column(name = "datetime")
     private Date datetime;
-
-
-    public Long getO_orderId() {
-        return orderId;
-    }
 
     public Long getOrderId() {
         return orderId;

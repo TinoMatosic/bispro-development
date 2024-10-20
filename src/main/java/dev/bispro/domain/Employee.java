@@ -4,14 +4,27 @@ import dev.bispro.domain.exceptions.DataValidationException;
 import jakarta.persistence.*;
 
 @Entity
-public class Employee extends Account {
+@Table(name = "employees")
+public class Employee{
 
-    @Column(name = "e_salary")
+    @Id
+    @Column(name = "employeeId")
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long employeeId;
+
+    @Column(name = "name", length = 50)
+    private String name;
+
+    @Column(name = "email", length = 50)
+    private String phoneNumber;
+
+    @Column(name = "salary")
     private double salary;
 
-    public Employee(Account account, double salary) {
-        super(account.getAccountId(), account.getFirstname(), account.getLastname(), account.getEmail(), account.getPassword());
-        this.salary = salary;
+    public Employee(String name, String phoneNumber, double salary) {
+        this.name = name;
+        this.phoneNumber = phoneNumber;
+        setSalary(salary);
     }
 
     public Employee() {
@@ -25,5 +38,25 @@ public class Employee extends Account {
     public void setSalary(double salary) {
         if(salary < 0) throw DataValidationException.forInvalidInput("Salary can't be less than 0!");
         this.salary = salary;
+    }
+
+    public Long getEmployeeId() {
+        return employeeId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 }

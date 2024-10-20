@@ -7,41 +7,41 @@ import jakarta.persistence.*;
 import java.util.List;
 
 @Entity
-@Table(name = "r_restaurants")
+@Table(name = "restaurants")
 public class Restaurant {
 
     @Id
-    @Column(name = "r_restaurantId")
+    @Column(name = "restaurantId")
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column(name = "r_name", length = 50)
+    @Column(name = "name", length = 50)
     private String name;
 
-    @Column(name = "r_street", length = 50)
+    @Column(name = "street", length = 50)
     private String street;
 
-    @Column(name = "r_streetnumber", length = 10)
+    @Column(name = "streetnumber", length = 10)
     private String number;
 
-    @Column(name = "r_city", length = 20)
+    @Column(name = "city", length = 20)
     private String city;
 
-    @Column(name = "r_postalCode", length = 10)
+    @Column(name = "postalCode", length = 10)
     private Integer postalCode;
 
-    @Column(name = "r_state", length = 50)
+    @Column(name = "state", length = 50)
     private String state;
 
-    @Column(name = "r_e_employees")
-    @OneToMany
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinColumn(foreignKey = @ForeignKey(name = "FK_restaurant_2_employee"))
     private List<Employee> employees;
 
-    @Column(name = "r_o_orders")
-    @OneToMany
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinColumn(foreignKey = @ForeignKey(name = "FK_restaurant_2_order"))
     private List<Order> orders;
 
-    public Restaurant(Long id, String name, String street, String number, String city, int postalCode, String state, List<Employee> employees,List<Order> orders) {
+    public Restaurant(Long id, String name, String street, String number, String city, Integer postalCode, String state, List<Employee> employees, List<Order> orders) {
         this.id = id;
         setName(name);
         setStreet(street);
@@ -51,11 +51,13 @@ public class Restaurant {
         setState(state);
         setEmployees(employees);
         setOrders(orders);
+        this.orders = orders;
     }
 
     public Restaurant() {
 
     }
+
     public Long getId() {
         return id;
     }
