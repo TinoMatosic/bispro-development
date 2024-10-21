@@ -1,7 +1,6 @@
 package dev.bispro.persistence.converters;
 
 import dev.bispro.domain.LayerType;
-import dev.bispro.domain.Role;
 import dev.bispro.persistence.exceptions.DataQualityException;
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
@@ -26,8 +25,8 @@ public class LayerTypeConverter implements AttributeConverter<LayerType, Charact
     public LayerType convertToEntityAttribute(Character dbData) {
         return switch (dbData) {
             case 'A' -> LayerType.AREA;
-            case 'U' -> LayerType.TABLE;
-            case 'L' -> LayerType.TEXT;
+            case 'T' -> LayerType.TABLE;
+            case 'X' -> LayerType.TEXT;
             case null -> null;
             default -> throw DataQualityException.forUnsupportedLiteral(dbData, LayerType.class, VALID_VALUES);
         };
