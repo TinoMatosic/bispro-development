@@ -2,16 +2,9 @@ package dev.bispro.domain;
 
 import jakarta.persistence.*;
 
-import jakarta.persistence.*;
-
 @Entity
 @Table(name = "layerAppearances")
-public class LayerAppearance {
-
-    @Id
-    @Column(name = "layerAppId")
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long appearanceId;
+public class Area extends Layer {
 
     @Column(name = "fill")
     private String fill;
@@ -19,18 +12,14 @@ public class LayerAppearance {
     @Column(name = "corners")
     private Integer corners;
 
-    public LayerAppearance(Long appearanceId, String fill, Integer corners) {
-        this.appearanceId = appearanceId;
+    public Area(String layername, Integer posX, Integer posY, Integer width, Integer height, Integer rotation, LayerType layerType, String fill, Integer opacity,  Integer corners) {
+        super(layername, posX, posY, width, height, rotation, fill, opacity, layerType);
         this.fill = fill;
         this.corners = corners;
     }
 
-    public LayerAppearance() {
+    public Area() {
 
-    }
-
-    public Long getAppearanceId() {
-        return appearanceId;
     }
 
     public String getFill() {

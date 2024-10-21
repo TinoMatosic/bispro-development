@@ -18,6 +18,7 @@ public class Order
 
     @Column(name = "net")
     private float net;
+
     @Column(name = "datetime")
     private Date datetime;
 

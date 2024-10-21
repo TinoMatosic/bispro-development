@@ -1,12 +1,12 @@
 package dev.bispro.domain;
 
 import dev.bispro.domain.exceptions.DataValidationException;
+import dev.bispro.persistence.converters.LayerTypeConverter;
 import jakarta.persistence.*;
-
-import java.util.List;
 
 @Entity
 @Table(name = "layers")
+@Inheritance(strategy = InheritanceType.JOINED)
 public class Layer {
 
     @Id
@@ -29,22 +29,30 @@ public class Layer {
     @Column(name = "height")
     private Integer height;
 
-    @Column(name = "appearance")
-    @OneToMany
-    private List<LayerAppearance> appearance;
-
     @Column(name = "rotation")
     private Integer rotation;
 
-    public Layer(Long layerId, String layername, Integer posX, Integer posY, Integer width, Integer height, List<LayerAppearance> appearance, Integer rotation) {
-        this.layerId = layerId;
+    @Column(name = "fill")
+    private String fill;
+
+    @Column(name = "opacity")
+    private Integer opacity;
+
+    @Column(columnDefinition = LayerTypeConverter.COLUMN_DEFINITION)
+    @Embedded
+    @Enumerated(EnumType.STRING)
+    private LayerType layerType;
+
+    public Layer(String layername, Integer posX, Integer posY, Integer width, Integer height, Integer rotation, String fill, Integer opacity, LayerType layerType) {
         setLayername(layername);
         setPosX(posX);
         setPosY(posY);
         setWidth(width);
         setHeight(height);
-        setAppearance(appearance);
         setRotation(rotation);
+        setFill(fill);
+        setOpacity(opacity);
+        setLayerType(layerType);
     }
 
     public Layer() {
@@ -110,17 +118,6 @@ public class Layer {
         this.height = height;
     }
 
-    public List<LayerAppearance> getAppearance() {
-        return appearance;
-    }
-
-    public void setAppearance(List<LayerAppearance> appearance) {
-        if (appearance == null) {
-            throw DataValidationException.forInvalidInput("Appearance list cannot be null.");
-        }
-        this.appearance = appearance;
-    }
-
     public Integer getRotation() {
         return rotation;
     }
@@ -130,5 +127,29 @@ public class Layer {
             throw DataValidationException.forInvalidInput("Rotation cannot be under or equal 0.");
         }
         this.rotation = rotation;
+    }
+
+    public LayerType getLayerType() {
+        return layerType;
+    }
+
+    public void setLayerType(LayerType layerType) {
+        this.layerType = layerType;
+    }
+
+    public String getFill() {
+        return fill;
+    }
+
+    public void setFill(String fill) {
+        this.fill = fill;
+    }
+
+    public Integer getOpacity() {
+        return opacity;
+    }
+
+    public void setOpacity(Integer opacity) {
+        this.opacity = opacity;
     }
 }

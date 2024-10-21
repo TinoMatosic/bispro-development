@@ -34,14 +34,19 @@ public class Restaurant {
     private String state;
 
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JoinColumn(foreignKey = @ForeignKey(name = "FK_restaurant_2_employee"))
+    @JoinColumn(foreignKey = @ForeignKey(name = "FK_restaurant_2_employees"))
     private List<Employee> employees;
 
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JoinColumn(foreignKey = @ForeignKey(name = "FK_restaurant_2_order"))
+    @JoinColumn(foreignKey = @ForeignKey(name = "FK_restaurant_2_orders"))
     private List<Order> orders;
 
-    public Restaurant(Long id, String name, String street, String number, String city, Integer postalCode, String state, List<Employee> employees, List<Order> orders) {
+    @OneToMany(cascade = {CascadeType.ALL, CascadeType.MERGE})
+    @JoinColumn(foreignKey = @ForeignKey(name = "FK_restaurant_2_layers"))
+    private List<Layer> layers;
+
+
+    public Restaurant(Long id, String name, String street, String number, String city, Integer postalCode, String state, List<Employee> employees, List<Order> orders, List<Layer> layers) {
         this.id = id;
         setName(name);
         setStreet(street);
@@ -52,6 +57,8 @@ public class Restaurant {
         setEmployees(employees);
         setOrders(orders);
         this.orders = orders;
+        this.employees = employees;
+        this.layers = layers;
     }
 
     public Restaurant() {
@@ -174,5 +181,13 @@ public class Restaurant {
         }
 
         this.orders = orders;
+    }
+
+    public List<Layer> getLayers() {
+        return layers;
+    }
+
+    public void setLayers(List<Layer> layers) {
+        this.layers = layers;
     }
 }
