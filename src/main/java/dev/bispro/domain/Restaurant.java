@@ -56,9 +56,8 @@ public class Restaurant {
         setState(state);
         setEmployees(employees);
         setOrders(orders);
-        this.orders = orders;
-        this.employees = employees;
-        this.layers = layers;
+        setEmployees(employees);
+        setLayers(layers);
     }
 
     public Restaurant() {
@@ -188,6 +187,9 @@ public class Restaurant {
     }
 
     public void setLayers(List<Layer> layers) {
+        if (layers == null) {
+            throw DataValidationException.forInvalidInput("Layers cannot be nulla");
+        }
         this.layers = layers;
     }
 }
