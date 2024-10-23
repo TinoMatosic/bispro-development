@@ -134,6 +134,9 @@ public class Layer {
     }
 
     public void setLayerType(LayerType layerType) {
+        if (layerType == null) {
+            throw DataValidationException.forInvalidInput("Layer Type cannot be null");
+        }
         this.layerType = layerType;
     }
 
@@ -142,6 +145,9 @@ public class Layer {
     }
 
     public void setFill(String fill) {
+        if (fill == null) {
+            throw DataValidationException.forInvalidInput("Fill cannot be null");
+        }
         this.fill = fill;
     }
 
@@ -150,6 +156,9 @@ public class Layer {
     }
 
     public void setOpacity(Integer opacity) {
+        if (opacity < 0 || opacity > 100) {
+            throw DataValidationException.forInvalidInput("Opacity cannot be under 0 or above 100");
+        }
         this.opacity = opacity;
     }
 }
