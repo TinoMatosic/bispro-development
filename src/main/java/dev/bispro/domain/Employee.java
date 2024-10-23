@@ -15,7 +15,7 @@ public class Employee{
     @Column(name = "name", length = 50)
     private String name;
 
-    @Column(name = "email", length = 50)
+    @Column(name = "phoneNumber", length = 50)
     private String phoneNumber;
 
     @Column(name = "salary")
