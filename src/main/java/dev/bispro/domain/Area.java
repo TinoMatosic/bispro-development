@@ -3,7 +3,8 @@ package dev.bispro.domain;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "layerAppearances")
+@Table(name = "areas")
+@PrimaryKeyJoinColumn(name = "area_layer_id", foreignKey = @ForeignKey(name = "FK_area_2_layer"))
 public class Area extends Layer {
 
     @Column(name = "fill")

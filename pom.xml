@@ -8,8 +8,8 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.3.4</version>
-        <relativePath/> <!-- Use the default parent -->
+        <version>3.3.5</version>
+        <relativePath/>
     </parent>
 
     <!-- Project Information -->
@@ -31,9 +31,14 @@
     <!-- Developer Information -->
     <developers>
         <developer>
-            <id>your-id</id>
-            <name>Your Name</name>
-            <email>you@example.com</email>
+            <id>b1</id>
+            <name>Tino Matosic</name>
+            <email>mat210632@spengergasse.at</email>
+        </developer>
+        <developer>
+            <id>b2</id>
+            <name>Nikita Filazafovitch</name>
+            <email>fil210626@spengergasse.at</email>
         </developer>
     </developers>
 

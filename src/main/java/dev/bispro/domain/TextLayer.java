@@ -1,11 +1,10 @@
 package dev.bispro.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "textLayers")
+@PrimaryKeyJoinColumn(name = "text_layer_id", foreignKey = @ForeignKey(name = "FK_textLayer_2_layer"))
 public class TextLayer extends Layer {
 
     @Column(name = "text")

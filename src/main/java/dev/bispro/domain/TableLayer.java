@@ -1,14 +1,13 @@
 package dev.bispro.domain;
 
 import dev.bispro.domain.exceptions.DataValidationException;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 import java.awt.*;
 
 @Entity
 @Table(name = "tableLayers")
+@PrimaryKeyJoinColumn(name = "table_layer_id", foreignKey = @ForeignKey(name = "FK_tableLayer_2_layer"))
 public class TableLayer extends Layer {
 
     @Column(name = "corner")
