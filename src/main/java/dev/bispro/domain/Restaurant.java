@@ -153,7 +153,7 @@ public class Restaurant {
         /* Überprüfen, ob die Liste null-Elemente enthält
         for (Employee employee : employees) {
             if (employee == null) {
-                throw DataValidationException.forInvalidInput("Employees list contains null elements.");
+                throw DataValidationException.forUpdateError("Employees list contains null elements.");
             }*/
         this.employees = employees;
         }
