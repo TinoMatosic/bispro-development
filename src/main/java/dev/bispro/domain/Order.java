@@ -15,16 +15,16 @@ public class Order
     private Long orderId;
 
     @Column(name = "total")
-    private float total;
+    private Float total;
 
     @Column(name = "net")
-    private float net;
+    private Float net;
 
     @Column(name = "datetime")
     private Date datetime;
 
 
-    public Order(float total, float net, Date datetime) {
+    public Order(Float total, Float net, Date datetime) {
         setTotal(total);
         setNet(net);
         setDatetime(datetime);
@@ -42,7 +42,7 @@ public class Order
         return total;
     }
 
-    public void setTotal(float total) {
+    public void setTotal(Float total) {
         if (total < 0) {
             throw DataValidationException.forInvalidInput("Total cannot be under 0");
         }
@@ -53,7 +53,7 @@ public class Order
         return net;
     }
 
-    public void setNet(float net) {
+    public void setNet(Float net) {
         if (net < 0) {
             throw DataValidationException.forInvalidInput("Net cannot be under 0");
         }
