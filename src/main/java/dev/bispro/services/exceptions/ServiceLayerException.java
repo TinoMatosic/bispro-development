@@ -14,7 +14,7 @@ public class ServiceLayerException extends RuntimeException {
         return new ServiceLayerException(message);
     }
 
-    public static ServiceLayerException userNotFound(String message) {
+    public static ServiceLayerException notFound(String message) {
         return new ServiceLayerException(message);
     }
 
@@ -23,6 +23,10 @@ public class ServiceLayerException extends RuntimeException {
     }
 
     public static ServiceLayerException forGetError(String message) {
+        return new ServiceLayerException(message);
+    }
+
+    public static ServiceLayerException forCreateError(String message) {
         return new ServiceLayerException(message);
     }
 }

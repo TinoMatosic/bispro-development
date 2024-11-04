@@ -24,13 +24,20 @@ public class UserServiceImpl implements UserService {
     public User findByUserId(Long userId) {
         validateArguments(userId, null);
         return userRepository.findById(userId)
-                .orElseThrow(() -> ServiceLayerException.userNotFound("User not found with ID: " + userId));
+                .orElseThrow(() -> ServiceLayerException.notFound("User not found with ID: " + userId));
     }
 
     @Override
     public User createUser(User user) {
+        if (user == null) {
+            throw ServiceLayerException.forInvalidArgument("User cannot be null");
+        }
         validateArguments(null, user);
-        return userRepository.save(user);
+        try {
+            return userRepository.save(user);
+        } catch (Exception e) {
+            throw ServiceLayerException.forCreateError("Error creating User: " + e.getMessage());
+        }
     }
 
     @Override
@@ -51,7 +58,7 @@ public class UserServiceImpl implements UserService {
                 throw ServiceLayerException.forUpdateError("Error Updating User with Id [" + userId + "]: " + e.getMessage());
             }
         } else {
-            throw ServiceLayerException.userNotFound("User not found with ID: " + userId);
+            throw ServiceLayerException.notFound("User not found with ID: " + userId);
         }
     }
 
@@ -70,7 +77,7 @@ public class UserServiceImpl implements UserService {
         try {
             return userRepository.findAll();
         } catch (Exception e) {
-            throw ServiceLayerException.forGetError("Error Retrieving All Users");
+            throw ServiceLayerException.forGetError("Error Retrieving All Users: " + e.getMessage());
         }
     }
 
