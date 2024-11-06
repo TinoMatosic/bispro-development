@@ -5,6 +5,7 @@ import dev.bispro.persistence.UserRepository;
 import dev.bispro.services.UserService;
 import dev.bispro.services.exceptions.ServiceLayerException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,30 +15,18 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository) {
+    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
-
     @Override
     public User findByUserId(Long userId) {
         validateArguments(userId, null);
         return userRepository.findById(userId)
                 .orElseThrow(() -> ServiceLayerException.notFound("User not found with ID: " + userId));
-    }
-
-    @Override
-    public User createUser(User user) {
-        if (user == null) {
-            throw ServiceLayerException.forInvalidArgument("User cannot be null");
-        }
-        validateArguments(null, user);
-        try {
-            return userRepository.save(user);
-        } catch (Exception e) {
-            throw ServiceLayerException.forCreateError("Error creating User: " + e.getMessage());
-        }
     }
 
     @Override
@@ -82,29 +71,26 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User login(String email, String password) {
-        try {
-            User user = userRepository.findByEmail(email);
-            if (!user.getPassword().equals(password)) {
-                throw ServiceLayerException.forInvalidArgument("Invalid password");
-            }
-            return user;
-        } catch (Exception e) {
-            throw ServiceLayerException.notFound("Error logging in: " + e.getMessage() + "\n" + e);
-        }
-    }
-
-    @Override
     public User signup(User user) {
         validateArguments(null, user);
         if (userRepository.findByEmail(user.getEmail()) != null) {
             throw ServiceLayerException.forCreateError("User with this email already exists");
         }
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         try {
             return userRepository.save(user);
         } catch (Exception e) {
-            throw ServiceLayerException.forCreateError("Error creating User: " + e.getMessage());
+            throw ServiceLayerException.forCreateError("Error logging in: " + e.getMessage());
         }
+    }
+
+    @Override
+    public User login(String email, String password) {
+        User user = userRepository.findByEmail(email);
+        if (user == null || !passwordEncoder.matches(password, user.getPassword())) {
+            throw ServiceLayerException.forInvalidArgument("Invalid email or password");
+        }
+        return user;
     }
 
     private void validateArguments(Long userId, User user) {
