@@ -81,6 +81,32 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    @Override
+    public User login(String email, String password) {
+        try {
+            User user = userRepository.findByEmail(email);
+            if (!user.getPassword().equals(password)) {
+                throw ServiceLayerException.forInvalidArgument("Invalid password");
+            }
+            return user;
+        } catch (Exception e) {
+            throw ServiceLayerException.notFound("Error logging in: " + e.getMessage() + "\n" + e);
+        }
+    }
+
+    @Override
+    public User signup(User user) {
+        validateArguments(null, user);
+        if (userRepository.findByEmail(user.getEmail()) != null) {
+            throw ServiceLayerException.forCreateError("User with this email already exists");
+        }
+        try {
+            return userRepository.save(user);
+        } catch (Exception e) {
+            throw ServiceLayerException.forCreateError("Error creating User: " + e.getMessage());
+        }
+    }
+
     private void validateArguments(Long userId, User user) {
         if (userId != null && userId < 0) {
             throw ServiceLayerException.forInvalidArgument("Invalid user ID: " + userId);
