@@ -1,11 +1,8 @@
 package dev.bispro.dtos;
 
 import dev.bispro.domain.Plan;
-import dev.bispro.domain.Role;
 
-public class UserDTO {
-
-    private Long userId;
+public class UserRegisterDTO {
 
     private String firstName;
 
@@ -13,25 +10,16 @@ public class UserDTO {
 
     private String email;
 
-    private Role role;
+    private String password;
 
     private Plan plan;
 
-    public UserDTO(Long userId, String firstName, String lastName, String email, Role role, Plan plan) {
-        this.userId = userId;
+    public UserRegisterDTO(String firstName, String lastName, String email, String password, Plan plan) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
-        this.role = role;
+        this.password = password;
         this.plan = plan;
-    }
-
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
     }
 
     public String getFirstName() {
@@ -58,12 +46,12 @@ public class UserDTO {
         this.email = email;
     }
 
-    public Role getRole() {
-        return role;
+    public String getPassword() {
+        return password;
     }
 
-    public void setRole(Role role) {
-        this.role = role;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public Plan getPlan() {

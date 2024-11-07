@@ -1,6 +1,11 @@
+// dev.bispro.services.impl.UserServiceImpl.java
 package dev.bispro.services.impl;
 
+import dev.bispro.domain.Role;
 import dev.bispro.domain.User;
+import dev.bispro.dtos.UserDTO;
+import dev.bispro.dtos.UserRegisterDTO;
+import dev.bispro.dtos.UserLoginDTO;
 import dev.bispro.persistence.UserRepository;
 import dev.bispro.services.UserService;
 import dev.bispro.services.exceptions.ServiceLayerException;
@@ -10,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -22,30 +28,27 @@ public class UserServiceImpl implements UserService {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
     }
+
     @Override
-    public User findByUserId(Long userId) {
-        validateArguments(userId, null);
-        return userRepository.findById(userId)
+    public UserDTO findByUserId(Long userId) {
+        validateUserId(userId);
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> ServiceLayerException.notFound("User not found with ID: " + userId));
+        return toUserDTO(user);
     }
 
     @Override
-    public User updateUser(Long userId, User user) {
-        validateArguments(userId, user);
+    public UserDTO updateUser(Long userId, UserDTO userDTO) {
+        validateUserId(userId);
         Optional<User> existingUser = userRepository.findById(userId);
         if (existingUser.isPresent()) {
-            try {
-                User updatedUser = existingUser.get();
-                updatedUser.setFirstname(user.getFirstname());
-                updatedUser.setLastname(user.getLastname());
-                updatedUser.setEmail(user.getEmail());
-                updatedUser.setPassword(user.getPassword());
-                updatedUser.setRole(user.getRole());
-                updatedUser.setPlan(user.getPlan());
-                return userRepository.save(updatedUser);
-            } catch (Exception e) {
-                throw ServiceLayerException.forUpdateError("Error Updating User with Id [" + userId + "]: " + e.getMessage());
-            }
+            User user = existingUser.get();
+            user.setFirstname(userDTO.getFirstName());
+            user.setLastname(userDTO.getLastName());
+            user.setEmail(userDTO.getEmail());
+            user.setRole(userDTO.getRole());
+            user.setPlan(userDTO.getPlan());
+            return toUserDTO(userRepository.save(user));
         } else {
             throw ServiceLayerException.notFound("User not found with ID: " + userId);
         }
@@ -53,55 +56,57 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteUser(Long userId) {
-        validateArguments(userId, null);
-        try {
-            userRepository.deleteById(userId);
-        } catch (Exception e) {
-            throw ServiceLayerException.forDeleteError("Error Deleting User with Id [" + userId + "]: " + e.getMessage());
-        }
+        validateUserId(userId);
+        userRepository.deleteById(userId);
     }
 
     @Override
-    public List<User> getAllUsers() {
-        try {
-            return userRepository.findAll();
-        } catch (Exception e) {
-            throw ServiceLayerException.forGetError("Error Retrieving All Users: " + e.getMessage());
-        }
+    public List<UserDTO> getAllUsers() {
+        return userRepository.findAll().stream()
+                .map(this::toUserDTO)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public User signup(User user) {
-        validateArguments(null, user);
-        if (userRepository.findByEmail(user.getEmail()) != null) {
+    public UserDTO signup(UserRegisterDTO userDTO) {
+        if (userRepository.findByEmail(userDTO.getEmail()) != null) {
             throw ServiceLayerException.forCreateError("User with this email already exists");
         }
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        try {
-            return userRepository.save(user);
-        } catch (Exception e) {
-            throw ServiceLayerException.forCreateError("Error logging in: " + e.getMessage());
-        }
+        User user = new User(
+                userDTO.getFirstName(),
+                userDTO.getLastName(),
+                userDTO.getEmail(),
+                passwordEncoder.encode(userDTO.getPassword()),
+                Role.USER,
+                userDTO.getPlan(),
+                null
+        );
+        return toUserDTO(userRepository.save(user));
     }
 
     @Override
-    public User login(String email, String password) {
-        User user = userRepository.findByEmail(email);
-        if (user == null || !passwordEncoder.matches(password, user.getPassword())) {
+    public UserDTO login(UserLoginDTO loginUserDTO) {
+        User user = userRepository.findByEmail(loginUserDTO.getEmail());
+        if (user == null || !passwordEncoder.matches(loginUserDTO.getPassword(), user.getPassword())) {
             throw ServiceLayerException.forInvalidArgument("Invalid email or password");
         }
-        return user;
+        return toUserDTO(user);
     }
 
-    private void validateArguments(Long userId, User user) {
-        if (userId != null && userId < 0) {
+    private UserDTO toUserDTO(User user) {
+        return new UserDTO(
+                user.getUserId(),
+                user.getFirstname(),
+                user.getLastname(),
+                user.getEmail(),
+                user.getRole(),
+                user.getPlan()
+        );
+    }
+
+    private void validateUserId(Long userId) {
+        if (userId == null || userId < 0) {
             throw ServiceLayerException.forInvalidArgument("Invalid user ID: " + userId);
-        }
-        if (user != null) {
-            if (user.getFirstname() == null || user.getLastname() == null ||
-                    user.getEmail() == null || user.getPassword() == null) {
-                throw ServiceLayerException.forInvalidArgument("User object contains null fields");
-            }
         }
     }
 }

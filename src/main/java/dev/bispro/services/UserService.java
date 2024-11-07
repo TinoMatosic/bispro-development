@@ -1,21 +1,19 @@
 package dev.bispro.services;
 
 import dev.bispro.domain.User;
+import dev.bispro.dtos.UserDTO;
+import dev.bispro.dtos.UserLoginDTO;
+import dev.bispro.dtos.UserRegisterDTO;
 
 import java.util.List;
 
 public interface UserService {
 
-    User findByUserId(Long userId);
-
-    User updateUser(Long userId, User user);
-
+    UserDTO findByUserId(Long userId);
+    UserDTO updateUser(Long userId, UserDTO user);
     void deleteUser(Long userId);
-
-    List<User> getAllUsers();
-
-    User login(String email, String password);
-
-    User signup(User user);
+    List<UserDTO> getAllUsers();
+    UserDTO signup(UserRegisterDTO user);
+    UserDTO login(UserLoginDTO loginUserDTO);
 
 }
