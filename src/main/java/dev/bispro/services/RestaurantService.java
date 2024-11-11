@@ -1,19 +1,13 @@
 package dev.bispro.services;
 
-import dev.bispro.domain.Restaurant;
+import dev.bispro.dtos.RestaurantDTO;
 
 import java.util.List;
 
 public interface RestaurantService {
 
-    Restaurant findByRestaurantById(Long restaurantId);
-
-    Restaurant createRestaurant(Restaurant restaurant);
-
-    Restaurant updateRestaurant(Long restaurantId, Restaurant restaurant);
-
+    RestaurantDTO findByRestaurantById(Long restaurantId);
+    RestaurantDTO updateRestaurant(Long restaurantId, RestaurantDTO restaurantDTO);
     void deleteRestaurant(Long restaurantId);
-
-    List<Restaurant> getAllRestaurants();
-
+    List<RestaurantDTO> getAllRestaurants();
 }

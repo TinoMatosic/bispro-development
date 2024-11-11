@@ -1,7 +1,7 @@
 package dev.bispro.services.impl;
 
 import dev.bispro.domain.Restaurant;
-import dev.bispro.domain.User;
+import dev.bispro.dtos.RestaurantDTO;
 import dev.bispro.persistence.RestaurantRepository;
 import dev.bispro.services.RestaurantService;
 import dev.bispro.services.exceptions.ServiceLayerException;
@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class RestaurantServiceImpl implements RestaurantService {
@@ -22,85 +23,105 @@ public class RestaurantServiceImpl implements RestaurantService {
     }
 
     @Override
-    public Restaurant findByRestaurantById(Long restaurantId) {
-        return restaurantRepository.findById(restaurantId)
+    public RestaurantDTO findByRestaurantById(Long restaurantId) {
+        validateRestaurantId(restaurantId);
+        Restaurant restaurant = restaurantRepository.findById(restaurantId)
                 .orElseThrow(() -> ServiceLayerException.notFound("Restaurant not found with ID: " + restaurantId));
+        return toRestaurantDTO(restaurant);
     }
-
+/**
     @Override
-    public Restaurant createRestaurant(Restaurant restaurant) {
-        if (restaurant == null) {
+    public RestaurantDTO createRestaurant(RestaurantDTO restaurantDTO) {
+        if (restaurantDTO == null) {
             throw ServiceLayerException.forInvalidArgument("Restaurant cannot be null");
         }
-        validateArguments(null, restaurant);
+        validateRestaurantData(restaurantDTO);
+
+        Restaurant restaurant = new Restaurant();
+        updateRestaurantFields(restaurant, restaurantDTO);
         try {
-            return restaurantRepository.save(restaurant);
+            return toRestaurantDTO(restaurantRepository.save(restaurant));
         } catch (Exception e) {
             throw ServiceLayerException.forCreateError("Error creating Restaurant: " + e.getMessage());
         }
     }
-
+**/
     @Override
-    public Restaurant updateRestaurant(Long restaurantId, Restaurant restaurant) {
-        validateArguments(restaurantId, restaurant);
-        Optional<Restaurant> existingRestaurant = restaurantRepository.findById(restaurantId);
-        if (existingRestaurant.isPresent()) {
-            try {
-                Restaurant updatedRestaurant = getRestaurant(restaurant, existingRestaurant);
-                return restaurantRepository.save(updatedRestaurant);
-            } catch (Exception e) {
-                throw ServiceLayerException.forUpdateError("Error updating Restaurant: " + e.getMessage());
-            }
-        } else {
-            throw ServiceLayerException.notFound("Restaurant not found with ID: " + restaurantId);
-        }
-    }
+    public RestaurantDTO updateRestaurant(Long restaurantId, RestaurantDTO restaurantDTO) {
+        validateRestaurantId(restaurantId);
+        validateRestaurantData(restaurantDTO);
 
-    private static Restaurant getRestaurant(Restaurant restaurant, Optional<Restaurant> existingRestaurant) {
-        Restaurant updatedRestaurant = existingRestaurant.get();
-        updatedRestaurant.setName(restaurant.getName());
-        updatedRestaurant.setStreet(restaurant.getStreet());
-        updatedRestaurant.setNumber(restaurant.getNumber());
-        updatedRestaurant.setCity(restaurant.getCity());
-        updatedRestaurant.setPostalCode(restaurant.getPostalCode());
-        updatedRestaurant.setState(restaurant.getState());
-        updatedRestaurant.setEmployees(restaurant.getEmployees());
-        updatedRestaurant.setOrders(restaurant.getOrders());
-        updatedRestaurant.setLayers(restaurant.getLayers());
-        return updatedRestaurant;
+        Restaurant existingRestaurant = restaurantRepository.findById(restaurantId)
+                .orElseThrow(() -> ServiceLayerException.notFound("Restaurant not found with ID: " + restaurantId));
+
+        updateRestaurantFields(existingRestaurant, restaurantDTO);
+        try {
+            return toRestaurantDTO(restaurantRepository.save(existingRestaurant));
+        } catch (Exception e) {
+            throw ServiceLayerException.forUpdateError("Error updating Restaurant: " + e.getMessage());
+        }
     }
 
     @Override
     public void deleteRestaurant(Long restaurantId) {
-        validateArguments(restaurantId, null);
+        validateRestaurantId(restaurantId);
         try {
             restaurantRepository.deleteById(restaurantId);
         } catch (Exception e) {
-            throw ServiceLayerException.forDeleteError("Error Deleting Restaurant with Id [" + restaurantId + "]: " + e.getMessage());
+            throw ServiceLayerException.forDeleteError("Error deleting Restaurant with Id [" + restaurantId + "]: " + e.getMessage());
         }
     }
 
     @Override
-    public List<Restaurant> getAllRestaurants() {
+    public List<RestaurantDTO> getAllRestaurants() {
         try {
-            return restaurantRepository.findAll();
+            return restaurantRepository.findAll().stream()
+                    .map(this::toRestaurantDTO)
+                    .collect(Collectors.toList());
         } catch (Exception e) {
             throw ServiceLayerException.forGetError("Error retrieving all Restaurants: " + e.getMessage());
         }
     }
 
-    private void validateArguments(Long restaurantId, Restaurant restaurant) {
-        if (restaurantId != null && restaurantId < 0) {
+
+    private RestaurantDTO toRestaurantDTO(Restaurant restaurant) {
+        return new RestaurantDTO(
+                restaurant.getId(),
+                restaurant.getName(),
+                restaurant.getStreet(),
+                restaurant.getNumber(),
+                restaurant.getCity(),
+                restaurant.getPostalCode(),
+                restaurant.getState()
+
+        );
+    }
+
+
+    private void validateRestaurantId(Long restaurantId) {
+        if (restaurantId == null || restaurantId < 0) {
             throw ServiceLayerException.forInvalidArgument("Invalid restaurant ID: " + restaurantId);
         }
-        if (restaurant != null) {
-            if (restaurant.getId() == null || restaurant.getName() == null ||
-                    restaurant.getStreet() == null || restaurant.getCity() == null ||
-                    restaurant.getPostalCode() == null || restaurant.getState() == null ||
-                    restaurant.getEmployees() == null || restaurant.getLayers() == null ||
-                    restaurant.getNumber() == null) {
-                throw ServiceLayerException.forInvalidArgument("Restaurant object contains null fields");
-            }
+    }
+
+
+    private void validateRestaurantData(RestaurantDTO restaurantDTO) {
+        if (restaurantDTO.getName() == null || restaurantDTO.getName().isEmpty() ||
+                restaurantDTO.getStreet() == null || restaurantDTO.getCity() == null ||
+                restaurantDTO.getPostalCode() == null || restaurantDTO.getState() == null ||
+                restaurantDTO.getNumber() == null) {
+            throw ServiceLayerException.forInvalidArgument("Restaurant data contains null or empty fields");
         }
+    }
+
+
+    private void updateRestaurantFields(Restaurant restaurant, RestaurantDTO restaurantDTO) {
+        restaurant.setName(restaurantDTO.getName());
+        restaurant.setStreet(restaurantDTO.getStreet());
+        restaurant.setNumber(restaurantDTO.getNumber());
+        restaurant.setCity(restaurantDTO.getCity());
+        restaurant.setPostalCode(restaurantDTO.getPostalCode());
+        restaurant.setState(restaurantDTO.getState());
+
     }
 }

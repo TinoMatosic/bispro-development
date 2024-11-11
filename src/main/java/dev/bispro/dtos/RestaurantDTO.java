@@ -1,7 +1,5 @@
 package dev.bispro.dtos;
 
-import java.util.List;
-
 public class RestaurantDTO {
 
     private Long id;
@@ -11,13 +9,9 @@ public class RestaurantDTO {
     private String city;
     private Integer postalCode;
     private String state;
-    private List<EmployeeDTO> employees;
-    private List<OrderDTO> orders;
-    private List<LayerDTO> layers;
 
     // Constructor with all fields
-    public RestaurantDTO(Long id, String name, String street, String number, String city, Integer postalCode, String state,
-                         List<EmployeeDTO> employees, List<OrderDTO> orders, List<LayerDTO> layers) {
+    public RestaurantDTO(Long id, String name, String street, String number, String city, Integer postalCode, String state) {
         this.id = id;
         this.name = name;
         this.street = street;
@@ -25,9 +19,6 @@ public class RestaurantDTO {
         this.city = city;
         this.postalCode = postalCode;
         this.state = state;
-        this.employees = employees;
-        this.orders = orders;
-        this.layers = layers;
     }
 
     // Getters and Setters
@@ -87,27 +78,5 @@ public class RestaurantDTO {
         this.state = state;
     }
 
-    public List<EmployeeDTO> getEmployees() {
-        return employees;
-    }
 
-    public void setEmployees(List<EmployeeDTO> employees) {
-        this.employees = employees;
-    }
-
-    public List<OrderDTO> getOrders() {
-        return orders;
-    }
-
-    public void setOrders(List<OrderDTO> orders) {
-        this.orders = orders;
-    }
-
-    public List<LayerDTO> getLayers() {
-        return layers;
-    }
-
-    public void setLayers(List<LayerDTO> layers) {
-        this.layers = layers;
-    }
 }

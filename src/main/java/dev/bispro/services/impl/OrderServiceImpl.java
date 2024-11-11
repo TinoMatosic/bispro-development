@@ -1,6 +1,7 @@
 package dev.bispro.services.impl;
 
 import dev.bispro.domain.Order;
+import dev.bispro.dtos.OrderDTO;
 import dev.bispro.persistence.OrderRepository;
 import dev.bispro.services.OrderService;
 import dev.bispro.services.exceptions.ServiceLayerException;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -22,32 +24,40 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Order findByOrderId(Long orderId) {
-        return orderRepository.findById(orderId)
+    public OrderDTO findByOrderId(Long orderId) {
+        validateOrderId(orderId);
+        Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> ServiceLayerException.notFound("Order not found with ID: " + orderId));
+        return toOrderDTO(order);
     }
 
     @Override
-    public Order createOrder(Order order) {
-        if (order == null) {
+    public OrderDTO createOrder(OrderDTO orderDTO) {
+        if (orderDTO == null) {
             throw ServiceLayerException.forInvalidArgument("Order cannot be null");
         }
-        validateOrder(order);
+        Order order = new Order(orderDTO.getTotal(), orderDTO.getNet(), orderDTO.getDatetime());
+        validateOrder(order); // Validates the order before saving
         try {
-            return orderRepository.save(order);
+            Order savedOrder = orderRepository.save(order);
+            return toOrderDTO(savedOrder);
         } catch (Exception e) {
             throw ServiceLayerException.forCreateError("Error creating Order: " + e.getMessage());
         }
     }
 
     @Override
-    public Order updateOrder(Long orderId, Order order) {
-        validateOrder(order);
+    public OrderDTO updateOrder(Long orderId, OrderDTO orderDTO) {
+        validateOrderId(orderId);
         Optional<Order> existingOrder = orderRepository.findById(orderId);
         if (existingOrder.isPresent()) {
+            Order order = existingOrder.get();
+            order.setTotal(orderDTO.getTotal());
+            order.setNet(orderDTO.getNet());
+            order.setDatetime(orderDTO.getDatetime());
             try {
-                Order updatedOrder = updateOrderFields(order, existingOrder.get());
-                return orderRepository.save(updatedOrder);
+                Order updatedOrder = orderRepository.save(order);
+                return toOrderDTO(updatedOrder);
             } catch (Exception e) {
                 throw ServiceLayerException.forUpdateError("Error updating Order: " + e.getMessage());
             }
@@ -56,19 +66,13 @@ public class OrderServiceImpl implements OrderService {
         }
     }
 
-    private Order updateOrderFields(Order order, Order existingOrder) {
-        existingOrder.setTotal(order.getTotal());
-        existingOrder.setNet(order.getNet());
-        existingOrder.setDatetime(order.getDatetime());
-        return existingOrder;
-    }
-
     @Override
     public void deleteOrder(Long orderId) {
-        if (!orderRepository.existsById(orderId)) {
-            throw ServiceLayerException.notFound("Order not found with ID: " + orderId);
-        }
+        validateOrderId(orderId);
         try {
+            if (!orderRepository.existsById(orderId)) {
+                throw ServiceLayerException.notFound("Order not found with ID: " + orderId);
+            }
             orderRepository.deleteById(orderId);
         } catch (Exception e) {
             throw ServiceLayerException.forDeleteError("Error deleting Order with ID [" + orderId + "]: " + e.getMessage());
@@ -76,11 +80,28 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<Order> getAllOrders() {
+    public List<OrderDTO> getAllOrders() {
         try {
-            return orderRepository.findAll();
+            return orderRepository.findAll().stream()
+                    .map(this::toOrderDTO)
+                    .collect(Collectors.toList());
         } catch (Exception e) {
             throw ServiceLayerException.forGetError("Error retrieving all Orders: " + e.getMessage());
+        }
+    }
+
+    private OrderDTO toOrderDTO(Order order) {
+        return new OrderDTO(
+                order.getOrderId(),
+                order.getTotal(),
+                order.getNet(),
+                order.getDatetime()
+        );
+    }
+
+    private void validateOrderId(Long orderId) {
+        if (orderId == null || orderId < 0) {
+            throw ServiceLayerException.forInvalidArgument("Invalid order ID: " + orderId);
         }
     }
 

@@ -2,6 +2,7 @@
 package dev.bispro.controllers;
 
 import dev.bispro.domain.Order;
+import dev.bispro.dtos.OrderDTO;
 import dev.bispro.services.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -22,17 +23,17 @@ public class OrderController {
     }
 
     @GetMapping("/{orderId}")
-    public ResponseEntity<Order> getOrderById(@PathVariable Long orderId) {
+    public ResponseEntity<OrderDTO> getOrderById(@PathVariable Long orderId) {
         return ResponseEntity.ok(orderService.findByOrderId(orderId));
     }
 
     @PostMapping
-    public ResponseEntity<Order> createOrder(@RequestBody Order order) {
+    public ResponseEntity<OrderDTO> createOrder(@RequestBody OrderDTO order) {
         return ResponseEntity.ok(orderService.createOrder(order));
     }
 
     @PutMapping("/{orderId}")
-    public ResponseEntity<Order> updateOrder(@PathVariable Long orderId, @RequestBody Order order) {
+    public ResponseEntity<OrderDTO> updateOrder(@PathVariable Long orderId, @RequestBody OrderDTO order) {
         return ResponseEntity.ok(orderService.updateOrder(orderId, order));
     }
 
@@ -43,7 +44,7 @@ public class OrderController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Order>> getAllOrders() {
+    public ResponseEntity<List<OrderDTO>> getAllOrders() {
         return ResponseEntity.ok(orderService.getAllOrders());
     }
 }

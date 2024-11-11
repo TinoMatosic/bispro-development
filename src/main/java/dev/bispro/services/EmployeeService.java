@@ -1,18 +1,18 @@
 package dev.bispro.services;
 
-import dev.bispro.domain.Employee;
+import dev.bispro.dtos.EmployeeDTO;
 
 import java.util.List;
 
-public interface EmployeeService
-{
-    Employee findByEmployeeId(Long employeeId);
+public interface EmployeeService {
 
-    Employee createEmployee(Employee employee);
+    EmployeeDTO findByEmployeeId(Long employeeId);
 
-    Employee updateEmployee(Long employeeId, Employee employee);
+    EmployeeDTO createEmployee(EmployeeDTO employeeDTO);
+
+    EmployeeDTO updateEmployee(Long employeeId, EmployeeDTO employeeDTO);
 
     void deleteEmployee(Long employeeId);
 
-    List<Employee> getAllEmployees();
+    List<EmployeeDTO> getAllEmployees();
 }

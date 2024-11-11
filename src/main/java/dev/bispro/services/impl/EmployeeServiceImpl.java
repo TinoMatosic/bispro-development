@@ -1,6 +1,7 @@
 package dev.bispro.services.impl;
 
 import dev.bispro.domain.Employee;
+import dev.bispro.dtos.EmployeeDTO;
 import dev.bispro.persistence.EmployeeRepository;
 import dev.bispro.services.EmployeeService;
 import dev.bispro.services.exceptions.ServiceLayerException;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
@@ -21,32 +23,47 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public Employee findByEmployeeId(Long employeeId) {
-        return employeeRepository.findById(employeeId)
+    public EmployeeDTO findByEmployeeId(Long employeeId) {
+        validateEmployeeId(employeeId);
+        Employee employee = employeeRepository.findById(employeeId)
                 .orElseThrow(() -> ServiceLayerException.notFound("Employee not found with ID: " + employeeId));
+        return toEmployeeDTO(employee);
     }
 
     @Override
-    public Employee createEmployee(Employee employee) {
-        if (employee == null) {
+    public EmployeeDTO createEmployee(EmployeeDTO employeeDTO) {
+        if (employeeDTO == null) {
             throw ServiceLayerException.forInvalidArgument("Employee cannot be null");
         }
-        validateEmployee(employee);
+        validateEmployeeDTO(employeeDTO);
+        Employee employee = new Employee(
+                employeeDTO.getName(),
+                employeeDTO.getPhoneNumber(),
+                employeeDTO.getSalary()
+        );
         try {
-            return employeeRepository.save(employee);
+            Employee savedEmployee = employeeRepository.save(employee);
+            return toEmployeeDTO(savedEmployee);
         } catch (Exception e) {
             throw ServiceLayerException.forCreateError("Error creating Employee: " + e.getMessage());
         }
     }
 
     @Override
-    public Employee updateEmployee(Long employeeId, Employee employee) {
-        validateEmployee(employee);
+    public EmployeeDTO updateEmployee(Long employeeId, EmployeeDTO employeeDTO) {
+        validateEmployeeId(employeeId);
+        validateEmployeeDTO(employeeDTO);
+
         Optional<Employee> existingEmployee = employeeRepository.findById(employeeId);
         if (existingEmployee.isPresent()) {
+            Employee employee = existingEmployee.get();
+            employee.setName(employeeDTO.getName());
+            employee.setPhoneNumber(employeeDTO.getPhoneNumber());
+            employee.setSalary(employeeDTO.getSalary());
+
             try {
-                Employee updatedEmployee = updateEmployeeFields(employee, existingEmployee.get());
-                return employeeRepository.save(updatedEmployee);
+                Employee updatedEmployee = employeeRepository.save(employee);
+                return toEmployeeDTO(updatedEmployee);
             } catch (Exception e) {
                 throw ServiceLayerException.forUpdateError("Error updating Employee: " + e.getMessage());
             }
@@ -64,6 +81,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public void deleteEmployee(Long employeeId) {
+        validateEmployeeId(employeeId);
         if (!employeeRepository.existsById(employeeId)) {
             throw ServiceLayerException.notFound("Employee not found with ID: " + employeeId);
         }
@@ -75,23 +93,40 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public List<Employee> getAllEmployees() {
+    public List<EmployeeDTO> getAllEmployees() {
         try {
-            return employeeRepository.findAll();
+            return employeeRepository.findAll().stream()
+                    .map(this::toEmployeeDTO)
+                    .collect(Collectors.toList());
         } catch (Exception e) {
             throw ServiceLayerException.forGetError("Error retrieving all Employees: " + e.getMessage());
         }
     }
 
-    private void validateEmployee(Employee employee) {
-        if (employee.getSalary() < 0) {
+    private void validateEmployeeId(Long employeeId) {
+        if (employeeId == null || employeeId < 0) {
+            throw ServiceLayerException.forInvalidArgument("Invalid employee ID: " + employeeId);
+        }
+    }
+
+    private void validateEmployeeDTO(EmployeeDTO employeeDTO) {
+        if (employeeDTO.getSalary() < 0) {
             throw ServiceLayerException.forInvalidArgument("Salary cannot be negative");
         }
-        if (employee.getName() == null || employee.getName().isEmpty()) {
+        if (employeeDTO.getName() == null || employeeDTO.getName().isEmpty()) {
             throw ServiceLayerException.forInvalidArgument("Employee name cannot be null or empty");
         }
-        if (employee.getPhoneNumber() == null) {
+        if (employee.getPhoneNumber() == null || employee.getPhoneNumber().isEmpty()) {
             throw ServiceLayerException.forInvalidArgument("Employee phone number cannot be null or empty");
         }
+    }
+
+    private EmployeeDTO toEmployeeDTO(Employee employee) {
+        return new EmployeeDTO(
+                employee.getEmployeeId(),
+                employee.getName(),
+                employee.getPhoneNumber(),
+                employee.getSalary()
+        );
     }
 }

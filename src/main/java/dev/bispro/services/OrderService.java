@@ -1,19 +1,23 @@
 package dev.bispro.services;
 
-import dev.bispro.domain.Order;
+import dev.bispro.dtos.OrderDTO;
 
 import java.util.List;
 
 public interface OrderService {
 
-    Order findByOrderId(Long orderId);
 
-    Order createOrder(Order order);
+    OrderDTO findByOrderId(Long orderId);
 
-    Order updateOrder(Long orderId, Order order);
+
+    OrderDTO createOrder(OrderDTO orderDTO);
+
+
+    OrderDTO updateOrder(Long orderId, OrderDTO orderDTO);
+
 
     void deleteOrder(Long orderId);
 
-    List<Order> getAllOrders();
 
+    List<OrderDTO> getAllOrders();
 }

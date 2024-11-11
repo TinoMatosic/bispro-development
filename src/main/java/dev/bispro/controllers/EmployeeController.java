@@ -1,6 +1,7 @@
 package dev.bispro.controllers;
 
 import dev.bispro.domain.Employee;
+import dev.bispro.dtos.EmployeeDTO;
 import dev.bispro.services.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -21,17 +22,17 @@ public class EmployeeController {
     }
 
     @GetMapping("/{employeeId}")
-    public ResponseEntity<Employee> getEmployeeById(@PathVariable Long employeeId) {
+    public ResponseEntity<EmployeeDTO> getEmployeeById(@PathVariable Long employeeId) {
         return ResponseEntity.ok(employeeService.findByEmployeeId(employeeId));
     }
 
     @PostMapping
-    public ResponseEntity<Employee> createEmployee(@RequestBody Employee employee) {
+    public ResponseEntity<EmployeeDTO> createEmployee(@RequestBody EmployeeDTO employee) {
         return ResponseEntity.ok(employeeService.createEmployee(employee));
     }
 
     @PutMapping("/{employeeId}")
-    public ResponseEntity<Employee> updateEmployee(@PathVariable Long employeeId, @RequestBody Employee employee) {
+    public ResponseEntity<EmployeeDTO> updateEmployee(@PathVariable Long employeeId, @RequestBody EmployeeDTO employee) {
         return ResponseEntity.ok(employeeService.updateEmployee(employeeId, employee));
     }
 
@@ -42,7 +43,7 @@ public class EmployeeController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Employee>> getAllEmployees() {
+    public ResponseEntity<List<EmployeeDTO>> getAllEmployees() {
         return ResponseEntity.ok(employeeService.getAllEmployees());
     }
 }

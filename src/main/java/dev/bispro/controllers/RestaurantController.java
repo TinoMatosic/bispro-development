@@ -2,6 +2,7 @@
 package dev.bispro.controllers;
 
 import dev.bispro.domain.Restaurant;
+import dev.bispro.dtos.RestaurantDTO;
 import dev.bispro.services.RestaurantService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -22,17 +23,17 @@ public class RestaurantController {
     }
 
     @GetMapping("/{restaurantId}")
-    public ResponseEntity<Restaurant> getRestaurantById(@PathVariable Long restaurantId) {
+    public ResponseEntity<RestaurantDTO> getRestaurantById(@PathVariable Long restaurantId) {
         return ResponseEntity.ok(restaurantService.findByRestaurantById(restaurantId));
     }
-
+/**
     @PostMapping
-    public ResponseEntity<Restaurant> createRestaurant(@RequestBody Restaurant restaurant) {
+    public ResponseEntity<RestaurantDTO> createRestaurant(@RequestBody RestaurantDTO restaurant) {
         return ResponseEntity.ok(restaurantService.createRestaurant(restaurant));
     }
-
+**/
     @PutMapping("/{restaurantId}")
-    public ResponseEntity<Restaurant> updateRestaurant(@PathVariable Long restaurantId, @RequestBody Restaurant restaurant) {
+    public ResponseEntity<RestaurantDTO> updateRestaurant(@PathVariable Long restaurantId, @RequestBody RestaurantDTO restaurant) {
         return ResponseEntity.ok(restaurantService.updateRestaurant(restaurantId, restaurant));
     }
 
@@ -43,7 +44,7 @@ public class RestaurantController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Restaurant>> getAllRestaurants() {
+    public ResponseEntity<List<RestaurantDTO>> getAllRestaurants() {
         return ResponseEntity.ok(restaurantService.getAllRestaurants());
     }
 }

@@ -2,25 +2,25 @@ package dev.bispro.dtos;
 
 public class EmployeeDTO {
 
-    private Long employeeId;
+    private Long id;
     private String name;
     private String phoneNumber;
     private double salary;
 
-    public EmployeeDTO(Long employeeId, String name, String phoneNumber, double salary) {
-        this.employeeId = employeeId;
+    public EmployeeDTO(Long id, String name, String phoneNumber, double salary) {
+        this.id = id;
         this.name = name;
         this.phoneNumber = phoneNumber;
         this.salary = salary;
     }
 
-
-    public Long getEmployeeId() {
-        return employeeId;
+    // Getters and setters
+    public Long getId() {
+        return id;
     }
 
-    public void setEmployeeId(Long employeeId) {
-        this.employeeId = employeeId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getName() {
