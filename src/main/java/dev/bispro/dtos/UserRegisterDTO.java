@@ -1,5 +1,6 @@
 package dev.bispro.dtos;
 
+import dev.bispro.domain.Email;
 import dev.bispro.domain.Plan;
 
 public class UserRegisterDTO {
@@ -8,13 +9,13 @@ public class UserRegisterDTO {
 
     private String lastName;
 
-    private String email;
+    private Email email;
 
     private String password;
 
     private Plan plan;
 
-    public UserRegisterDTO(String firstName, String lastName, String email, String password, Plan plan) {
+    public UserRegisterDTO(String firstName, String lastName, Email email, String password, Plan plan) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
@@ -38,11 +39,11 @@ public class UserRegisterDTO {
         this.lastName = lastName;
     }
 
-    public String getEmail() {
+    public Email getEmail() {
         return email;
     }
 
-    public void setEmail(String email) {
+    public void setEmail(Email email) {
         this.email = email;
     }
 

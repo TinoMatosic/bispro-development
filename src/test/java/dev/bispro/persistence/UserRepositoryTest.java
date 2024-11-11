@@ -18,8 +18,8 @@ class UserRepositoryTest {
         var user = new User(
                 "Tino",
                 "Matosic",
-                "tino.mat@icloud.com",
-                "12345678",
+                new Email("tino@gmail.com"),
+                new Password("StrongPass1@"),
                 Role.USER,
                 Plan.PRO,
                 new Restaurant());

@@ -1,6 +1,7 @@
 // dev.bispro.services.impl.UserServiceImpl.java
 package dev.bispro.services.impl;
 
+import dev.bispro.domain.Password;
 import dev.bispro.domain.Role;
 import dev.bispro.domain.User;
 import dev.bispro.dtos.UserDTO;
@@ -76,7 +77,7 @@ public class UserServiceImpl implements UserService {
                 userDTO.getFirstName(),
                 userDTO.getLastName(),
                 userDTO.getEmail(),
-                passwordEncoder.encode(userDTO.getPassword()),
+                new Password(userDTO.getPassword()),
                 Role.USER,
                 userDTO.getPlan(),
                 null
@@ -87,7 +88,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDTO login(UserLoginDTO loginUserDTO) {
         User user = userRepository.findByEmail(loginUserDTO.getEmail());
-        if (user == null || !passwordEncoder.matches(loginUserDTO.getPassword(), user.getPassword())) {
+        if (user == null || !passwordEncoder.matches(loginUserDTO.getPassword(), user.getPassword().password())) {
             throw ServiceLayerException.forInvalidArgument("Invalid email or password");
         }
         return toUserDTO(user);
@@ -100,7 +101,8 @@ public class UserServiceImpl implements UserService {
                 user.getLastname(),
                 user.getEmail(),
                 user.getRole(),
-                user.getPlan()
+                user.getPlan(),
+                user.getPhoneNumber()
         );
     }
 

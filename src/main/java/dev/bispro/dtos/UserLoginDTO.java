@@ -1,23 +1,24 @@
 package dev.bispro.dtos;
 
+import dev.bispro.domain.Email;
 import dev.bispro.domain.Plan;
 import dev.bispro.domain.Role;
 
 public class UserLoginDTO {
 
-    private String email;
+    private Email email;
 
     private String password;
 
     public UserLoginDTO() {
     }
 
-    public UserLoginDTO(String email, String password) {
+    public UserLoginDTO(Email email, String password) {
         this.email = email;
         this.password = password;
     }
 
-    public String getEmail() {
+    public Email getEmail() {
         return email;
     }
 
@@ -25,7 +26,7 @@ public class UserLoginDTO {
         return password;
     }
 
-    public void setEmail(String email) {
+    public void setEmail(Email email) {
         this.email = email;
     }
 

@@ -4,6 +4,8 @@ package dev.bispro.domain;
 import dev.bispro.domain.exceptions.DataValidationException;
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Entity
@@ -33,6 +35,14 @@ public class Restaurant {
     @Column(name = "state", length = 50)
     private String state;
 
+    @Column(name = "email", length = 50)
+    @Embedded
+    private Email email;
+
+    @Column(name = "phoneNumber", length = 50)
+    @Embedded
+    private PhoneNumber phoneNumber;
+
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(foreignKey = @ForeignKey(name = "FK_restaurant_2_employees"))
     private List<Employee> employees;
@@ -46,18 +56,18 @@ public class Restaurant {
     private List<Layer> layers;
 
 
-    public Restaurant(Long id, String name, String street, String number, String city, Integer postalCode, String state, List<Employee> employees, List<Order> orders, List<Layer> layers) {
-        this.id = id;
-        setName(name);
-        setStreet(street);
-        setNumber(number);
-        setCity(city);
-        setPostalCode(postalCode);
-        setState(state);
-        setEmployees(employees);
-        setOrders(orders);
-        setEmployees(employees);
-        setLayers(layers);
+    public Restaurant(String name, String street, String number, String city, Integer postalCode, String state, Email email, PhoneNumber phoneNumber) {
+        this.name = name;
+        this.street = street;
+        this.number = number;
+        this.city = city;
+        this.postalCode = postalCode;
+        this.state = state;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.employees = Collections.emptyList();
+        this.orders = Collections.emptyList();
+        this.layers = Collections.emptyList();
     }
 
     public Restaurant() {
@@ -191,5 +201,21 @@ public class Restaurant {
             throw DataValidationException.forInvalidInput("Layers cannot be nulla");
         }
         this.layers = layers;
+    }
+
+    public Email getEmail() {
+        return email;
+    }
+
+    public void setEmail(Email email) {
+        this.email = email;
+    }
+
+    public PhoneNumber getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(PhoneNumber phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 }

@@ -90,7 +90,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         if (employee.getName() == null || employee.getName().isEmpty()) {
             throw ServiceLayerException.forInvalidArgument("Employee name cannot be null or empty");
         }
-        if (employee.getPhoneNumber() == null || employee.getPhoneNumber().isEmpty()) {
+        if (employee.getPhoneNumber() == null) {
             throw ServiceLayerException.forInvalidArgument("Employee phone number cannot be null or empty");
         }
     }

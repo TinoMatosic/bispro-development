@@ -21,10 +21,16 @@ public class User {
     private String lastname;
 
     @Column(name = "email", length = 50)
-    private String email;
+    @Embedded
+    private Email email;
+
+    @Column(name = "phoneNumber", length = 50)
+    @Embedded
+    private PhoneNumber phoneNumber;
 
     @Column(name = "password", length = 50)
-    private String password;
+    @Embedded
+    private Password password;
 
     @Column(columnDefinition = RoleConverter.COLUMN_DEFINITION)
     @Embedded
@@ -40,7 +46,7 @@ public class User {
     @JoinColumn(foreignKey = @ForeignKey(name = "FK_user_2_restaurant"))
     private Restaurant restaurant;
 
-    public User(String firstname, String lastname, String email, String password, Role role, Plan plan, Restaurant restaurant) {
+    public User(String firstname, String lastname, Email email, Password password, Role role, Plan plan, Restaurant restaurant) {
         setFirstname(firstname);
         setLastname(lastname);
         setEmail(email);
@@ -80,25 +86,27 @@ public class User {
         return lastname;
     }
 
-    public void setEmail(String email) {
-        if (email == null || !email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$")) {
-            throw DataValidationException.forInvalidInput("Invalid email format.");
-        }
+    public void setEmail(Email email) {
         this.email = email;
     }
 
-    public String getEmail() {
+    public Email getEmail() {
         return email;
     }
 
-    public void setPassword(String password) {
-        if (password == null || password.length() < 8) {
-            throw DataValidationException.forInvalidInput("Password must be at least 8 characters long.");
-        }
+    public PhoneNumber getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(PhoneNumber phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public void setPassword(Password password) {
         this.password = password;
     }
 
-    public String getPassword() {
+    public Password getPassword() {
         return password;
     }
 

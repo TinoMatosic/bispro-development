@@ -1,5 +1,7 @@
 package dev.bispro.dtos;
 
+import dev.bispro.domain.Email;
+import dev.bispro.domain.PhoneNumber;
 import dev.bispro.domain.Plan;
 import dev.bispro.domain.Role;
 
@@ -11,19 +13,22 @@ public class UserDTO {
 
     private String lastName;
 
-    private String email;
+    private Email email;
+
+    private PhoneNumber phoneNumber;
 
     private Role role;
 
     private Plan plan;
 
-    public UserDTO(Long userId, String firstName, String lastName, String email, Role role, Plan plan) {
+    public UserDTO(Long userId, String firstName, String lastName, Email email, Role role, Plan plan, PhoneNumber phoneNumber) {
         this.userId = userId;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.role = role;
         this.plan = plan;
+        this.phoneNumber = phoneNumber;
     }
 
     public Long getUserId() {
@@ -50,11 +55,11 @@ public class UserDTO {
         this.lastName = lastName;
     }
 
-    public String getEmail() {
+    public Email getEmail() {
         return email;
     }
 
-    public void setEmail(String email) {
+    public void setEmail(Email email) {
         this.email = email;
     }
 
@@ -72,5 +77,13 @@ public class UserDTO {
 
     public void setPlan(Plan plan) {
         this.plan = plan;
+    }
+
+    public PhoneNumber getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(PhoneNumber phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 }

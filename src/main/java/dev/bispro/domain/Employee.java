@@ -16,12 +16,13 @@ public class Employee{
     private String name;
 
     @Column(name = "phoneNumber", length = 50)
-    private String phoneNumber;
+    @Embedded
+    private PhoneNumber phoneNumber;
 
     @Column(name = "salary")
     private double salary;
 
-    public Employee(String name, String phoneNumber, double salary) {
+    public Employee(String name, PhoneNumber phoneNumber, double salary) {
         this.name = name;
         this.phoneNumber = phoneNumber;
         setSalary(salary);
@@ -40,10 +41,6 @@ public class Employee{
         this.salary = salary;
     }
 
-    public Long getEmployeeId() {
-        return employeeId;
-    }
-
     public String getName() {
         return name;
     }
@@ -52,11 +49,11 @@ public class Employee{
         this.name = name;
     }
 
-    public String getPhoneNumber() {
+    public PhoneNumber getPhoneNumber() {
         return phoneNumber;
     }
 
-    public void setPhoneNumber(String phoneNumber) {
+    public void setPhoneNumber(PhoneNumber phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
 }
