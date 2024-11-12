@@ -10,6 +10,10 @@ public record PhoneNumber(String number) {
         if(number.length() < 10) throw PhoneNumberException.forInvalidLength(number);
     }
 
+    public boolean isEmpty() {
+        return number.isEmpty(); // Employee Service (Zeile 119)
+    }
+
     public static class PhoneNumberException extends RuntimeException {
 
         public PhoneNumberException(String message) {

@@ -56,4 +56,9 @@ public class Employee{
     public void setPhoneNumber(PhoneNumber phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
+
+    public Long getEmployeeId()
+    {
+        return employeeId;
+    }
 }

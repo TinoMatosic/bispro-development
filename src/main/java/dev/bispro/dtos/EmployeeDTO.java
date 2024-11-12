@@ -1,26 +1,28 @@
 package dev.bispro.dtos;
 
+import dev.bispro.domain.PhoneNumber;
+
 public class EmployeeDTO {
 
-    private Long id;
+    private Long employeeId;
     private String name;
-    private String phoneNumber;
+    private PhoneNumber phoneNumber;
     private double salary;
 
-    public EmployeeDTO(Long id, String name, String phoneNumber, double salary) {
-        this.id = id;
+    public EmployeeDTO(Long id, String name, PhoneNumber phoneNumber, double salary) {
+        this.employeeId = id;
         this.name = name;
         this.phoneNumber = phoneNumber;
         this.salary = salary;
     }
 
-    // Getters and setters
-    public Long getId() {
-        return id;
+
+    public Long getEmployeeId() {
+        return employeeId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setEmployeeId(Long id) {
+        this.employeeId = id;
     }
 
     public String getName() {
@@ -31,11 +33,11 @@ public class EmployeeDTO {
         this.name = name;
     }
 
-    public String getPhoneNumber() {
+    public PhoneNumber getPhoneNumber() {
         return phoneNumber;
     }
 
-    public void setPhoneNumber(String phoneNumber) {
+    public void setPhoneNumber(PhoneNumber phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
 

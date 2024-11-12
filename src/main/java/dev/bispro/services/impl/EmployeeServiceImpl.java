@@ -116,7 +116,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         if (employeeDTO.getName() == null || employeeDTO.getName().isEmpty()) {
             throw ServiceLayerException.forInvalidArgument("Employee name cannot be null or empty");
         }
-        if (employee.getPhoneNumber() == null || employee.getPhoneNumber().isEmpty()) {
+        if (employeeDTO.getPhoneNumber() == null || employeeDTO.getPhoneNumber().isEmpty()) {
             throw ServiceLayerException.forInvalidArgument("Employee phone number cannot be null or empty");
         }
     }
