@@ -31,7 +31,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDTO findByUserId(Long userId) {
+    public UserDTO findByUserId(User.UserId userId) {
         validateUserId(userId);
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> ServiceLayerException.notFound("User not found with ID: " + userId));
@@ -39,7 +39,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDTO updateUser(Long userId, UserDTO userDTO) {
+    public UserDTO updateUser(User.UserId userId, UserDTO userDTO) {
         validateUserId(userId);
         Optional<User> existingUser = userRepository.findById(userId);
         if (existingUser.isPresent()) {
@@ -56,7 +56,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void deleteUser(Long userId) {
+    public void deleteUser(User.UserId userId) {
         validateUserId(userId);
         userRepository.deleteById(userId);
     }
@@ -96,7 +96,7 @@ public class UserServiceImpl implements UserService {
 
     private UserDTO toUserDTO(User user) {
         return new UserDTO(
-                user.getUserId(),
+                user.getUserId().id(),
                 user.getFirstname(),
                 user.getLastname(),
                 user.getEmail(),
@@ -106,8 +106,8 @@ public class UserServiceImpl implements UserService {
         );
     }
 
-    private void validateUserId(Long userId) {
-        if (userId == null || userId < 0) {
+    private void validateUserId(User.UserId userId) {
+        if (userId == null || userId.id() < 0) {
             throw ServiceLayerException.forInvalidArgument("Invalid user ID: " + userId);
         }
     }

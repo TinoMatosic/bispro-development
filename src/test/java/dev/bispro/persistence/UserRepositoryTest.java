@@ -27,6 +27,6 @@ class UserRepositoryTest {
         var savedUser = userRepository.save(user);
 
         assertThat(savedUser).isNotNull();
-        assertThat(savedUser.getUserId()).isPositive();
+        assertThat(savedUser.getUserId().id()).isPositive();
     }
 }

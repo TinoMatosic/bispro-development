@@ -4,15 +4,16 @@ import dev.bispro.domain.exceptions.DataValidationException;
 import dev.bispro.persistence.converters.PlanConverter;
 import dev.bispro.persistence.converters.RoleConverter;
 import jakarta.persistence.*;
+import org.antlr.v4.runtime.misc.NotNull;
+import org.springframework.lang.NonNull;
 
 @Entity
 @Table(name = "users")
 public class User {
 
-    @Id
+    @EmbeddedId
     @Column(name = "userId")
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long userId;
+    private UserId userId;
 
     @Column(name = "firstname", length = 50)
     private String firstname;
@@ -60,7 +61,7 @@ public class User {
 
     }
 
-    public Long getUserId() {
+    public UserId getUserId() {
         return userId;
     }
 
@@ -129,4 +130,7 @@ public class User {
     public Restaurant getRestaurant() {
         return restaurant;
     }
+
+    @Embeddable
+    public record UserId(@GeneratedValue @NonNull Long id) {}
 }

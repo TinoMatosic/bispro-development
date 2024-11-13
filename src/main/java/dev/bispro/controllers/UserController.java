@@ -1,6 +1,7 @@
 // dev.bispro.controllers.UserController.java
 package dev.bispro.controllers;
 
+import dev.bispro.domain.User;
 import dev.bispro.dtos.UserDTO;
 import dev.bispro.dtos.UserRegisterDTO;
 import dev.bispro.dtos.UserLoginDTO;
@@ -24,17 +25,17 @@ public class UserController {
     }
 
     @GetMapping("/{userId}")
-    public ResponseEntity<UserDTO> getUserById(@PathVariable Long userId) {
+    public ResponseEntity<UserDTO> getUserById(@PathVariable User.UserId userId) {
         return ResponseEntity.ok(userService.findByUserId(userId));
     }
 
     @PutMapping("/{userId}")
-    public ResponseEntity<UserDTO> updateUser(@PathVariable Long userId, @RequestBody UserDTO userDTO) {
+    public ResponseEntity<UserDTO> updateUser(@PathVariable User.UserId userId, @RequestBody UserDTO userDTO) {
         return ResponseEntity.ok(userService.updateUser(userId, userDTO));
     }
 
     @DeleteMapping("/{userId}")
-    public ResponseEntity<Void> deleteUser(@PathVariable Long userId) {
+    public ResponseEntity<Void> deleteUser(@PathVariable User.UserId userId) {
         userService.deleteUser(userId);
         return ResponseEntity.noContent().build();
     }
