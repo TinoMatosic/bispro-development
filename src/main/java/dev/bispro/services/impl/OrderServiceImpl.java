@@ -24,7 +24,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public OrderDTO findByOrderId(Long orderId) {
+    public OrderDTO findByOrderId(Order.OrderId orderId) {
         validateOrderId(orderId);
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> ServiceLayerException.notFound("Order not found with ID: " + orderId));
@@ -47,7 +47,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public OrderDTO updateOrder(Long orderId, OrderDTO orderDTO) {
+    public OrderDTO updateOrder(Order.OrderId orderId, OrderDTO orderDTO) {
         validateOrderId(orderId);
         Optional<Order> existingOrder = orderRepository.findById(orderId);
         if (existingOrder.isPresent()) {
@@ -67,7 +67,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public void deleteOrder(Long orderId) {
+    public void deleteOrder(Order.OrderId orderId) {
         validateOrderId(orderId);
         try {
             if (!orderRepository.existsById(orderId)) {
@@ -92,15 +92,15 @@ public class OrderServiceImpl implements OrderService {
 
     private OrderDTO toOrderDTO(Order order) {
         return new OrderDTO(
-                order.getOrderId(),
+                order.getOrderId().orderId(),
                 order.getTotal(),
                 order.getNet(),
                 order.getDatetime()
         );
     }
 
-    private void validateOrderId(Long orderId) {
-        if (orderId == null || orderId < 0) {
+    private void validateOrderId(Order.OrderId orderId) {
+        if (orderId == null || orderId.orderId() < 0) {
             throw ServiceLayerException.forInvalidArgument("Invalid order ID: " + orderId);
         }
     }

@@ -2,6 +2,7 @@ package dev.bispro.domain;
 
 import dev.bispro.domain.exceptions.DataValidationException;
 import jakarta.persistence.*;
+import org.springframework.lang.NonNull;
 
 import java.util.Date;
 
@@ -9,10 +10,10 @@ import java.util.Date;
 @Table(name = "orders")
 public class Order
 {
-    @Id
+
+    @EmbeddedId
     @Column(name = "orderid")
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long orderId;
+    private OrderId orderId;
 
     @Column(name = "total")
     private Float total;
@@ -34,7 +35,7 @@ public class Order
 
     }
 
-    public Long getOrderId() {
+    public OrderId getOrderId() {
         return orderId;
     }
 
@@ -71,6 +72,8 @@ public class Order
         }
         this.datetime = datetime;
     }
+
+    public record OrderId(@GeneratedValue @NonNull Long orderId) {}
 
 
     // only for testing
