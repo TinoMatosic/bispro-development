@@ -71,4 +71,10 @@ public class Order
         }
         this.datetime = datetime;
     }
+
+
+    // only for testing
+    public void setOrderId(long l) {
+        this.orderId = l;
+    }
 }

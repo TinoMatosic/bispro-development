@@ -34,3 +34,6 @@ public class UserLoginDTO {
         this.password = password;
     }
 }
+
+// https://dzone.com/articles/how-to-use-cookies-in-spring-boot
+// browser Cookies zur Übergabe des aktuellen Benutzers (Tipp von Tim)
