@@ -23,7 +23,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public EmployeeDTO findByEmployeeId(Long employeeId) {
+    public EmployeeDTO findByEmployeeId(Employee.EmployeeId employeeId) {
         validateEmployeeId(employeeId);
         Employee employee = employeeRepository.findById(employeeId)
                 .orElseThrow(() -> ServiceLayerException.notFound("Employee not found with ID: " + employeeId));
@@ -50,7 +50,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public EmployeeDTO updateEmployee(Long employeeId, EmployeeDTO employeeDTO) {
+    public EmployeeDTO updateEmployee(Employee.EmployeeId employeeId, EmployeeDTO employeeDTO) {
         validateEmployeeId(employeeId);
         validateEmployeeDTO(employeeDTO);
 
@@ -80,7 +80,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public void deleteEmployee(Long employeeId) {
+    public void deleteEmployee(Employee.EmployeeId employeeId) {
         validateEmployeeId(employeeId);
         if (!employeeRepository.existsById(employeeId)) {
             throw ServiceLayerException.notFound("Employee not found with ID: " + employeeId);
@@ -103,8 +103,8 @@ public class EmployeeServiceImpl implements EmployeeService {
         }
     }
 
-    private void validateEmployeeId(Long employeeId) {
-        if (employeeId == null || employeeId < 0) {
+    private void validateEmployeeId(Employee.EmployeeId employeeId) {
+        if (employeeId == null || employeeId.employeeId() < 0) {
             throw ServiceLayerException.forInvalidArgument("Invalid employee ID: " + employeeId);
         }
     }
@@ -123,7 +123,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     private EmployeeDTO toEmployeeDTO(Employee employee) {
         return new EmployeeDTO(
-                employee.getEmployeeId(),
+                employee.getEmployeeId().employeeId(),
                 employee.getName(),
                 employee.getPhoneNumber(),
                 employee.getSalary()

@@ -2,15 +2,15 @@ package dev.bispro.domain;
 
 import dev.bispro.domain.exceptions.DataValidationException;
 import jakarta.persistence.*;
+import org.springframework.lang.NonNull;
 
 @Entity
 @Table(name = "employees")
 public class Employee{
 
-    @Id
+    @EmbeddedId
     @Column(name = "employeeId")
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long employeeId;
+    private EmployeeId employeeId;
 
     @Column(name = "name", length = 50)
     private String name;
@@ -57,8 +57,10 @@ public class Employee{
         this.phoneNumber = phoneNumber;
     }
 
-    public Long getEmployeeId()
+    public Employee.EmployeeId getEmployeeId()
     {
         return employeeId;
     }
+
+    public record EmployeeId(@GeneratedValue @NonNull Long employeeId) {}
 }
