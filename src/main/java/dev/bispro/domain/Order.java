@@ -77,7 +77,7 @@ public class Order
 
 
     // only for testing
-    public void setOrderId(long l) {
+    public void setOrderId(OrderId l) {
         this.orderId = l;
     }
 }

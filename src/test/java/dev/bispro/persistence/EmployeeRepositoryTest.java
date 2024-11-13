@@ -22,7 +22,6 @@ class EmployeeRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        // Initialize an Employee for reuse in tests
         testEmployee = new Employee("Alice Johnson", new PhoneNumber("1234567890"), 50000);
     }
 
@@ -57,7 +56,7 @@ class EmployeeRepositoryTest {
     @DisplayName("Test deleting an Employee by ID")
     void testDeleteById() {
         Employee savedEmployee = employeeRepository.save(testEmployee);
-        Long employeeId = savedEmployee.getEmployeeId();
+        Employee.EmployeeId employeeId = savedEmployee.getEmployeeId();
 
         employeeRepository.deleteById(employeeId);
         assertFalse(employeeRepository.existsById(employeeId), "Employee should not exist after deletion");
@@ -66,9 +65,6 @@ class EmployeeRepositoryTest {
     @Test
     @DisplayName("Test finding non-existent Employee by ID")
     void testFindByIdNonExistent() {
-        assertFalse(employeeRepository.findById(999L).isPresent(), "Non-existent employee ID should return empty Optional");
+        assertFalse(employeeRepository.findById(new Employee.EmployeeId(999L)).isPresent(), "Non-existent employee ID should return empty Optional");
     }
-
-
-    // die PhoneNumber muss noch getestet werden (für Tino)
 }

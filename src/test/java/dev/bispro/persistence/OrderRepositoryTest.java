@@ -23,7 +23,6 @@ class OrderRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        // Initialize an Order for reuse in tests, using a valid future date for datetime
         testOrder = new Order(150.0f, 140.0f, new Date(System.currentTimeMillis() + 10000)); // future date
     }
 
@@ -57,7 +56,7 @@ class OrderRepositoryTest {
     @DisplayName("Test deleting an Order by ID")
     void testDeleteById() {
         Order savedOrder = orderRepository.save(testOrder);
-        Long orderId = savedOrder.getOrderId();
+        Order.OrderId orderId = savedOrder.getOrderId();
 
         orderRepository.deleteById(orderId);
         assertFalse(orderRepository.existsById(orderId), "Order should not exist after deletion");
@@ -66,7 +65,7 @@ class OrderRepositoryTest {
     @Test
     @DisplayName("Test finding non-existent Order by ID")
     void testFindByIdNonExistent() {
-        assertFalse(orderRepository.findById(999L).isPresent(), "Non-existent order ID should return empty Optional");
+        assertFalse(orderRepository.findById(new Order.OrderId(999L)).isPresent(), "Non-existent order ID should return empty Optional");
     }
 
     @Test
