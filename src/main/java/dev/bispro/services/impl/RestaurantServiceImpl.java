@@ -23,7 +23,7 @@ public class RestaurantServiceImpl implements RestaurantService {
     }
 
     @Override
-    public RestaurantDTO findByRestaurantById(Long restaurantId) {
+    public RestaurantDTO findByRestaurantById(Restaurant.RestaurantId restaurantId) {
         validateRestaurantId(restaurantId);
         Restaurant restaurant = restaurantRepository.findById(restaurantId)
                 .orElseThrow(() -> ServiceLayerException.notFound("Restaurant not found with ID: " + restaurantId));
@@ -47,7 +47,7 @@ public class RestaurantServiceImpl implements RestaurantService {
     }
 **/
     @Override
-    public RestaurantDTO updateRestaurant(Long restaurantId, RestaurantDTO restaurantDTO) {
+    public RestaurantDTO updateRestaurant(Restaurant.RestaurantId restaurantId, RestaurantDTO restaurantDTO) {
         validateRestaurantId(restaurantId);
         validateRestaurantData(restaurantDTO);
 
@@ -63,7 +63,7 @@ public class RestaurantServiceImpl implements RestaurantService {
     }
 
     @Override
-    public void deleteRestaurant(Long restaurantId) {
+    public void deleteRestaurant(Restaurant.RestaurantId restaurantId) {
         validateRestaurantId(restaurantId);
         try {
             restaurantRepository.deleteById(restaurantId);
@@ -86,7 +86,7 @@ public class RestaurantServiceImpl implements RestaurantService {
 
     private RestaurantDTO toRestaurantDTO(Restaurant restaurant) {
         return new RestaurantDTO(
-                restaurant.getId(),
+                restaurant.getId().id(),
                 restaurant.getName(),
                 restaurant.getStreet(),
                 restaurant.getNumber(),
@@ -98,8 +98,8 @@ public class RestaurantServiceImpl implements RestaurantService {
     }
 
 
-    private void validateRestaurantId(Long restaurantId) {
-        if (restaurantId == null || restaurantId < 0) {
+    private void validateRestaurantId(Restaurant.RestaurantId restaurantId) {
+        if (restaurantId == null || restaurantId.id() < 0) {
             throw ServiceLayerException.forInvalidArgument("Invalid restaurant ID: " + restaurantId);
         }
     }

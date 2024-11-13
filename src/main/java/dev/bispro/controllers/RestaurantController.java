@@ -23,7 +23,7 @@ public class RestaurantController {
     }
 
     @GetMapping("/{restaurantId}")
-    public ResponseEntity<RestaurantDTO> getRestaurantById(@PathVariable Long restaurantId) {
+    public ResponseEntity<RestaurantDTO> getRestaurantById(@PathVariable Restaurant.RestaurantId restaurantId) {
         return ResponseEntity.ok(restaurantService.findByRestaurantById(restaurantId));
     }
 /**
@@ -33,12 +33,12 @@ public class RestaurantController {
     }
 **/
     @PutMapping("/{restaurantId}")
-    public ResponseEntity<RestaurantDTO> updateRestaurant(@PathVariable Long restaurantId, @RequestBody RestaurantDTO restaurant) {
+    public ResponseEntity<RestaurantDTO> updateRestaurant(@PathVariable Restaurant.RestaurantId restaurantId, @RequestBody RestaurantDTO restaurant) {
         return ResponseEntity.ok(restaurantService.updateRestaurant(restaurantId, restaurant));
     }
 
     @DeleteMapping("/{restaurantId}")
-    public ResponseEntity<Void> deleteRestaurant(@PathVariable Long restaurantId) {
+    public ResponseEntity<Void> deleteRestaurant(@PathVariable Restaurant.RestaurantId restaurantId) {
         restaurantService.deleteRestaurant(restaurantId);
         return ResponseEntity.noContent().build();
     }

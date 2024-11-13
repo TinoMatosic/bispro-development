@@ -3,6 +3,8 @@ package dev.bispro.domain;
 
 import dev.bispro.domain.exceptions.DataValidationException;
 import jakarta.persistence.*;
+import org.hibernate.annotations.Generated;
+import org.springframework.lang.NonNull;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -12,10 +14,9 @@ import java.util.List;
 @Table(name = "restaurants")
 public class Restaurant {
 
-    @Id
+    @EmbeddedId
     @Column(name = "restaurantId")
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private RestaurantId id;
 
     @Column(name = "name", length = 50)
     private String name;
@@ -74,7 +75,7 @@ public class Restaurant {
 
     }
 
-    public Long getId() {
+    public RestaurantId getId() {
         return id;
     }
 
@@ -218,4 +219,6 @@ public class Restaurant {
     public void setPhoneNumber(PhoneNumber phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
+
+    public record RestaurantId(@GeneratedValue @NonNull Long id) {}
 }
