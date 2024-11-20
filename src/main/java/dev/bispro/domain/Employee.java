@@ -23,10 +23,14 @@ public class Employee{
     private double salary;
 
     public Employee(String name, PhoneNumber phoneNumber, double salary) {
+        if (name == null || name.trim().isEmpty()) {
+            throw DataValidationException.forInvalidInput("Employee name cannot be null or empty.");
+        }
         this.name = name;
         this.phoneNumber = phoneNumber;
         setSalary(salary);
     }
+
 
     public Employee() {
 

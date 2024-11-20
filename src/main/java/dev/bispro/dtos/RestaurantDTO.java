@@ -10,7 +10,7 @@ public class RestaurantDTO {
     private Integer postalCode;
     private String state;
 
-    // Constructor with all fields
+
     public RestaurantDTO(Long id, String name, String street, String number, String city, Integer postalCode, String state) {
         this.id = id;
         this.name = name;
@@ -21,7 +21,7 @@ public class RestaurantDTO {
         this.state = state;
     }
 
-    // Getters and Setters
+
     public Long getId() {
         return id;
     }
