@@ -13,7 +13,7 @@ public class User {
 
     @EmbeddedId
     @Column(name = "userId")
-    private UserId userId;
+    private UserId id;
 
     @Column(name = "firstname", length = 50)
     private String firstname;
@@ -34,13 +34,9 @@ public class User {
     private Password password;
 
     @Column(columnDefinition = RoleConverter.COLUMN_DEFINITION)
-    @Embedded
-    @Enumerated(EnumType.STRING)
     private Role role;
 
     @Column(columnDefinition = PlanConverter.COLUMN_DEFINITION)
-    @Embedded
-    @Enumerated(EnumType.STRING)
     private Plan plan;
 
     @OneToOne
@@ -48,12 +44,12 @@ public class User {
     private Restaurant restaurant;
 
     public User(String firstname, String lastname, Email email, Password password, Role role, Plan plan, Restaurant restaurant) {
-        setFirstname(firstname);
-        setLastname(lastname);
-        setEmail(email);
-        setPassword(password);
-        setRole(role);
-        setPlan(plan);
+        this.firstname = firstname;
+        this.lastname = lastname;
+        this.email = email;
+        this.password = password;
+        this.role = role;
+        this.plan = plan;
         this.restaurant = restaurant;
     }
 
@@ -62,7 +58,7 @@ public class User {
     }
 
     public UserId getUserId() {
-        return userId;
+        return id;
     }
 
     public void setFirstname(String firstname) {
