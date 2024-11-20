@@ -8,7 +8,7 @@ import jakarta.persistence.Converter;
 @Converter(autoApply = true)
 public class RoleConverter implements AttributeConverter<Role, Character> {
 
-    public static final String VALID_VALUES = "'A','P','S'";
+    public static final String VALID_VALUES = "'A','U','L'";
     public static final String COLUMN_DEFINITION = "enum ("+VALID_VALUES+")";
 
     @Override

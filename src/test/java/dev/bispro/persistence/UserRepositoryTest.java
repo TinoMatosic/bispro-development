@@ -32,7 +32,7 @@ class UserRepositoryTest {
 
         assertNotNull(savedUser.getUserId(), "Saved user should have an ID");
         assertEquals("Tino", savedUser.getFirstname(), "User's first name should match");
-        assertEquals("tino@gmail.com", savedUser.getEmail().value(), "User's email should match");
+        assertEquals("tino@gmail.com", savedUser.getEmail().email(), "User's email should match");
     }
 
     @Test

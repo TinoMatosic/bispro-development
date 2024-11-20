@@ -5,14 +5,14 @@ import jakarta.persistence.Embeddable;
 import java.util.regex.Pattern;
 
 @Embeddable
-public record Email(String value) {
+public record Email(String email) {
 
     public static final String REGEX = "[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?";
     private static final Pattern PATTERN = Pattern.compile(REGEX);
 
     public Email{
-        if (value == null) throw EmailException.forNullValue();
-        if (!PATTERN.matcher(value).matches()) throw EmailException.forInvalidValue(value);
+        if (email == null) throw EmailException.forNullValue();
+        if (!PATTERN.matcher(email).matches()) throw EmailException.forInvalidValue(email);
     }
 
     public static class EmailException extends RuntimeException {
